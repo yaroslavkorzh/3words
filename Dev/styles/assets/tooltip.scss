@@ -17,7 +17,7 @@
     border-radius: $s_radius;
     padding: $s_space;
 
-    width: 320px;
+    min-width: 320px;
     background: $c_beige;
     border: 1px solid $c_orange;
 
@@ -108,17 +108,29 @@
     }
     &__example{
       display: none;
+      width: 100%;
+      font-size: 14px;
+      margin: $s_space 0;
+      &__title{
+        display: block;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: $s_space;
+
+      }
     }
 
 
 
     &--extended{
+      //min-width: 600px;
+      //width: auto;
       white-space: nowrap;
-      width: auto;
       .__ts-word-tooltip__description{
+        //float: left;
+        //max-width: 350px;
         display: inline-block;
         vertical-align: top;
-        white-space: normal;
       }
       .__ts-icon--info-showmore{
         display: none;
@@ -128,10 +140,13 @@
       }
 
       .__ts-word-tooltip__figure{
+        //display: block;
+        //margin-left:$s_space;
         display: inline-block;
         vertical-align: top;
-        white-space: normal;
-        margin-left:$s_space;
+      }
+      .__ts-word-tooltip__example{
+        display: block;
       }
     }
 
@@ -177,6 +192,14 @@
         svg{
           fill: lighten($c_orange, 20%);
         }
+      }
+    }
+
+    &--example{
+      vertical-align: text-top;
+      svg{
+        width: 100%;
+        fill: $c_orange;
       }
     }
   }
