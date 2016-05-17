@@ -16,6 +16,7 @@
   }
 
   &.__ts-word--current-state{
+    cursor: pointer;
     background: $c_blue;
     padding: 0 10px;
     .__ts-word__label{
