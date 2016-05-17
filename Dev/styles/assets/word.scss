@@ -1,0 +1,76 @@
+.__ts-word{
+  position: relative;
+  display: inline-block;
+  transition: background .5s ease;
+  z-index: 999;
+  &--active {
+    z-index: 100000 !important;
+  }
+  &__label{
+    &--translate{
+      display: none;
+    }
+    &--translit{
+      display: none;
+    }
+  }
+
+  &.__ts-word--current-state{
+    background: $c_blue;
+    padding: 0 10px;
+    .__ts-word__label{
+      &--translate{
+        display: none;
+      }
+      &--translit{
+        display: none;
+      }
+      &--current{
+        display: inline-block;
+      }
+    }
+  }
+
+  &.__ts-word--active-state{
+
+    cursor: pointer;
+    background: $c_blue;
+    padding: 0 10px;
+    .__ts-word__label{
+      &--translate{
+        display: none;
+      }
+      &--translit{
+        display: inline-block;
+      }
+      &--current{
+        display: none;
+      }
+    }
+  }
+
+  &.__ts-word--learned-state{
+
+    cursor: pointer;
+    background: $c_blue;
+    padding: 0 10px;
+    &--done{
+      background: $c_green;
+    }
+    .__ts-word__label{
+      &--translate{
+        display: inline-block;
+      }
+      &--translit{
+        display: none;
+      }
+      &--current{
+        display: none;
+      }
+    }
+  }
+
+
+
+
+}

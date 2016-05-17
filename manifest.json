@@ -1,0 +1,49 @@
+{
+  "name": " 3 Words : Awesome language learning app",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "homepage_url": "http://trustsourcing.com",
+  "icons": {
+    "16": "Dist/imgs/icons/icon16.png",
+    "48": "Dist/imgs/icons/icon48.png",
+    "128": "Dist/imgs/icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "Dist/scripts/background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "Dist/imgs/icons/icon48.png",
+    "default_title": "3 Words: language learning app",
+    "default_popup": "Dist/browser.html"
+  },
+  "permissions": [
+    "contentSettings",
+    "contextMenus",
+    "cookies",
+    "notifications",
+    "tabs",
+    "geolocation"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "Dist/styles/style.css"
+      ]
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "Dist/scripts/inject.js"
+      ]
+    }
+  ]
+}
