@@ -1,11 +1,11 @@
-$(function () {
+$(function() {
     var editorExtensionId = chrome.runtime.id;
     chrome.runtime.sendMessage(editorExtensionId, {event: "pluginState"}, function (response) {
 
-        $('#tsWordsPlugin').prop('checked', response.data);
+           $('#tsWordsPlugin').prop('checked',response.data);
         setTimeout(function () {
             $('.__ts-browser-switch__label').addClass('__ts-browser-switch__label--anim');
-        }, 500);
+        },500);
 
 
     });
@@ -22,21 +22,23 @@ $(function () {
             if (request.event == "updateStats") {
                 console.log(request.data)
                 updateTable(request.data)
+                //sendResponse({data: statsData});
             }
         });
 
 
+
     $(document).on('change.tsWordsPlugin', '#tsWordsPlugin', function (e) {
-        if ($(this).prop('checked')) {
-            chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function (response) {
+        if($(this).prop('checked')){
+            chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function(response) {
 
                 console.log(response.message);
             });
         }
-        else {
-            chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function (response) {
-                console.log(response.message);
-                updateTable(response.statsData)
+        else{
+            chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
+                $('.__ts-browser-stat').hide();
+                console.log(response.farewell);
             });
         }
     })

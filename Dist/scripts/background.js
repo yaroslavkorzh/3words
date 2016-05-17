@@ -37,7 +37,7 @@ var dataDefaults = [
         translation: 'кот',
         transliteration: 'kot',
         example: 'My neghbours had a very cute red kot.',
-        imageurl: 'http://animaliaz-life.com/data_images/cat/cat8.jpg'
+        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
     }, {
         id: '2',
         learned: false,
@@ -54,119 +54,120 @@ var dataDefaults = [
         transliteration: 'kahk',
         example: 'Kak do I get to the train station?',
         imageurl: 'http://www.howdesign.com/wp-content/uploads/header-logo.png'
-    }, {
-        id: '3',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'so',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'так',
-        transliteration: 'tahk',
-        example: 'Tak you are from the USA?',
-        imageurl: 'https://yt3.ggpht.com/-UsWDpckUytU/AAAAAAAAAAI/AAAAAAAAAAA/xEj_G-KlTa8/s88-c-k-no-rj-c0xffffff/photo.jpg'
-    }, {
-        id: '4',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'who',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'кто',
-        transliteration: 'ktoh',
-        example: 'Ktoh wants to become a millionaire.',
-        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
-    }, {
-        id: '5',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'there',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'там',
-        transliteration: 'tahm',
-        example: 'I\'ll be tahm in half an hour.',
-        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS_gMm4cnuzS_llC1qUVP1S55AXYKUsNQjycWRCGTauM6LmTscd'
-    }, {
-        id: '6',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'house',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'дом',
-        transliteration: 'dom',
-        example: 'Here\'s my dohm.',
-        imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSeTaZydnQeebe9W9gXyG73bYYRl-WLYWAzFoWvuyTKUnR7A_NXLg'
-    }, {
-        id: '7',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'then',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'потом',
-        transliteration: 'puhtohm',
-        example: 'Go straight, puhtohm turn to the right.',
-        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCo1HOjg5cdOPq5Adr0LLziWZAvV0CAOHNgC9WXm-MarM2l3nH'
-    }, {
-        id: '8',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'place',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'место',
-        transliteration: 'myehstah',
-        example: 'Our team won the first myehstah.',
-        imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSIXYEePSh2zO3c8Mi7p0YlHgtOtPPHbA6jC5LcpmrO02wHklxGsA'
-    }, {
-        id: '9',
-        learned: false,
-        active: false,
-        renderCount: 0,
-        renderCap: 3,
-        actionCount: 0,
-        actionCap: 3,
-        word: 'it',
-        type: 'word',
-        language_from: 'en',
-        language_to: 'ru',
-        translation: 'оно',
-        transliteration: 'ahnoh',
-        example: 'Yes, time doesn\'t run, ahnoh flies really!',
-        imageurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfj4QNLo63QEmQdtuOeQTi3S-HFNo9TEc7GPrlI4zu6qMNffavkA'
-    }
+    },
+    // {
+    //     id: '3',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'so',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'так',
+    //     transliteration: 'tahk',
+    //     example: 'Tak you are from the USA?',
+    //     imageurl: 'https://yt3.ggpht.com/-UsWDpckUytU/AAAAAAAAAAI/AAAAAAAAAAA/xEj_G-KlTa8/s88-c-k-no-rj-c0xffffff/photo.jpg'
+    // }, {
+    //     id: '4',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'who',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'кто',
+    //     transliteration: 'ktoh',
+    //     example: 'Ktoh wants to become a millionaire.',
+    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
+    // }, {
+    //     id: '5',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'there',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'там',
+    //     transliteration: 'tahm',
+    //     example: 'I\'ll be tahm in half an hour.',
+    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS_gMm4cnuzS_llC1qUVP1S55AXYKUsNQjycWRCGTauM6LmTscd'
+    // }, {
+    //     id: '6',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'house',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'дом',
+    //     transliteration: 'dom',
+    //     example: 'Here\'s my dohm.',
+    //     imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSeTaZydnQeebe9W9gXyG73bYYRl-WLYWAzFoWvuyTKUnR7A_NXLg'
+    // }, {
+    //     id: '7',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'then',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'потом',
+    //     transliteration: 'puhtohm',
+    //     example: 'Go straight, puhtohm turn to the right.',
+    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCo1HOjg5cdOPq5Adr0LLziWZAvV0CAOHNgC9WXm-MarM2l3nH'
+    // }, {
+    //     id: '8',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'place',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'место',
+    //     transliteration: 'myehstah',
+    //     example: 'Our team won the first myehstah.',
+    //     imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSIXYEePSh2zO3c8Mi7p0YlHgtOtPPHbA6jC5LcpmrO02wHklxGsA'
+    // }, {
+    //     id: '9',
+    //     learned: false,
+    //     active: false,
+    //     renderCount: 0,
+    //     renderCap: 3,
+    //     actionCount: 0,
+    //     actionCap: 3,
+    //     word: 'it',
+    //     type: 'word',
+    //     language_from: 'en',
+    //     language_to: 'ru',
+    //     translation: 'оно',
+    //     transliteration: 'ahnoh',
+    //     example: 'Yes, time doesn\'t run, ahnoh flies really!',
+    //     imageurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfj4QNLo63QEmQdtuOeQTi3S-HFNo9TEc7GPrlI4zu6qMNffavkA'
+    // }
 ];
 var data = JSON.parse(JSON.stringify(dataDefaults));
 var pluginState = true;
@@ -209,6 +210,8 @@ chrome.extension.onMessage.addListener(
         }
 
         if (request.event == "getData") {
+            returnMessage('getData', data);
+
             sendResponse({data: data});
 
         }
@@ -217,7 +220,7 @@ chrome.extension.onMessage.addListener(
             sendResponse({data: pluginState});
         }
         if (request.event == "updateStats") {
-            sendResponse({data: statsData});
+            sendResponse({data: statsData, limit: wordsLimit, counter: wordsCounter});
         }
 
         if (request.event == "updateWord") {
@@ -247,8 +250,8 @@ function updateWordData(wordData) {
     //     wordData.learned = true;
     // }
     wordsCounter = 0;
-    for (var k = 0; k < data.length; k++) {
-        if (data[k].learned) {
+    for(var k =0; k< data.length; k++){
+        if(data[k].learned){
             ++wordsCounter;
 
         }
@@ -309,4 +312,3 @@ function getWordIndex(id) {
 };
 
 
-returnMessage('getData', data);
