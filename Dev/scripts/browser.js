@@ -1,11 +1,11 @@
-$(function() {
+$(function () {
     var editorExtensionId = chrome.runtime.id;
     chrome.runtime.sendMessage(editorExtensionId, {event: "pluginState"}, function (response) {
 
-           $('#tsWordsPlugin').prop('checked',response.data);
+        $('#tsWordsPlugin').prop('checked', response.data);
         setTimeout(function () {
             $('.__ts-browser-switch__label').addClass('__ts-browser-switch__label--anim');
-        },500);
+        }, 500);
 
 
     });
@@ -22,38 +22,38 @@ $(function() {
             if (request.event == "updateStats") {
                 console.log(request.data)
                 updateTable(request.data)
-                //sendResponse({data: statsData});
             }
         });
 
 
-
     $(document).on('change.tsWordsPlugin', '#tsWordsPlugin', function (e) {
-        if($(this).prop('checked')){
-            chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function(response) {
+        if ($(this).prop('checked')) {
+            chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function (response) {
 
-                console.log(response.farewell);
+                console.log(response.message);
             });
         }
-        else{
-            chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
-                console.log(response.farewell);
+        else {
+            chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function (response) {
+                console.log(response.message);
+                updateTable(response.statsData)
             });
         }
     })
 });
 
-function updateTable(data){
+function updateTable(data) {
     var len = data.length;
     chrome.browserAction.setBadgeText({text: len.toString()});
+    $('.__ts-browser-stat__counter').text(len);
     console.log(data);
-    if(len){
-        var html='';
-        for(var i =0; i< len; i++){
+    if (len) {
+        var html = '';
+        for (var i = 0; i < len; i++) {
             html += '<tr>' +
-                '<td class="__ts-browser-stat__table__word">'+data[i].word+'</td>' +
-                '<td class="__ts-browser-stat__table__counter">'+data[i].counter+'</td>' +
-                '<td class="__ts-browser-stat__table__counter">'+data[i].actionCount+'</td>' +
+                '<td class="__ts-browser-stat__table__word">' + data[i].word + '</td>' +
+                '<td class="__ts-browser-stat__table__counter">' + data[i].counter + '</td>' +
+                '<td class="__ts-browser-stat__table__counter">' + data[i].actionCount + '</td>' +
                 '</tr>';
 
         }
@@ -61,7 +61,7 @@ function updateTable(data){
         $('.__ts-browser-stat__table tbody').html(html);
         $('.__ts-browser-stat').show();
     }
-    else{
+    else {
         $('.__ts-browser-stat').hide();
     }
 }

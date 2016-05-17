@@ -187,30 +187,34 @@ chrome.extension.onMessage.addListener(
             statsData = [];
             wordsCounter = 0;
             returnMessage("disable");
-            sendResponse({farewell: "disable plugin"});
+            returnMessage("updateStats", []);
+            sendResponse({message: "disable plugin", statsData: statsData});
         }
         if (request.event == "enable") {
             returnMessage("enable");
 
             wordsCounter = 0;
             pluginState = true;
-            getData();
-            sendResponse({farewell: "enable plugin"});
+            //returnMessage('getData', data);
+            sendResponse({message: "enable plugin"});
+        }
+
+        // for future use
+        if (request.event == "reset") {
+            returnMessage("enable");
+            wordsCounter = 0;
+            pluginState = true;
+            returnMessage('getData',  JSON.parse(JSON.stringify(dataDefaults)));
+            sendResponse({message: "enable plugin"});
         }
 
         if (request.event == "getData") {
-            //getData();
-
             sendResponse({data: data});
-            //alert('get data from background script');
 
         }
 
         if (request.event == "pluginState") {
-            //getData();
             sendResponse({data: pluginState});
-            //alert('get data from background script');
-
         }
         if (request.event == "updateStats") {
             sendResponse({data: statsData});
@@ -218,27 +222,20 @@ chrome.extension.onMessage.addListener(
 
         if (request.event == "updateWord") {
             updateWordData(request.word);
-            var newData = getWordById(request.word.id)
+            var newData = getWordById(request.word.id);
             sendResponse({result: 'success', word: newData});
-            //alert('get data from background script');
 
         }
 
     });
 
-function returnMessage(messageToReturn) {
+function returnMessage(messageToReturn, data) {
     chrome.tabs.getSelected(null, function (tab) {
-
-        chrome.tabs.sendMessage(tab.id, {event: messageToReturn}, function (response) {
-            console.log(response.farewell);
-        });
-    });
-}
-
-function getData() {
-    chrome.tabs.getSelected(null, function (tab) {
-        chrome.tabs.sendMessage(tab.id, {event: 'getData', response: data}, function (response) {
-            console.log(response.farewell);
+        if(!data){
+            data = {}
+        }
+        chrome.tabs.sendMessage(tab.id, {event: messageToReturn, data: data}, function (response) {
+            console.log(response);
         });
     });
 }
@@ -250,8 +247,8 @@ function updateWordData(wordData) {
     //     wordData.learned = true;
     // }
     wordsCounter = 0;
-    for(var k =0; k< data.length; k++){
-        if(data[k].learned){
+    for (var k = 0; k < data.length; k++) {
+        if (data[k].learned) {
             ++wordsCounter;
 
         }
@@ -312,6 +309,4 @@ function getWordIndex(id) {
 };
 
 
-chrome.tabs.sendMessage(tab.id, {event: 'getData', response: data}, function (response) {
-    console.log(response.farewell);
-});
+returnMessage('getData', data);
