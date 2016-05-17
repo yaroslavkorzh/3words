@@ -193,7 +193,7 @@ function menuConstructor() {
                         self.isReady = true;
                     }
                 }
-            }, 1000);
+            }, 700);
 
 
 
@@ -206,7 +206,9 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word-tooltip', function (e) {
             e.stopPropagation();
-            $(document).trigger("click.tsWordsPlugin");
+            if(!$(this).hasClass('__ts-word-tooltip--extended')){
+                $('.__ts-icon--info-showmore').trigger("click.tsWordsPlugin");
+            }
         });
         $(document).on("click.tsWordsPlugin", '.__ts-icon--close', function (e) {
             e.stopPropagation();
