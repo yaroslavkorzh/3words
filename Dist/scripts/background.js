@@ -176,48 +176,41 @@ var wordsCounter = 0;
 var editorExtensionId = chrome.runtime.id;
 var statsData = [];
 
-
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
-            "from the extension");
+            "from the extension", request);
         if (request.event == "disable") {
             data = JSON.parse(JSON.stringify(dataDefaults));
             pluginState = false;
             statsData = [];
             wordsCounter = 0;
             returnMessage("disable");
-            returnMessage("updateStats", []);
-            sendResponse({message: "disable plugin", statsData: statsData});
+            sendResponse({message: "disable plugin"});
         }
         if (request.event == "enable") {
             returnMessage("enable");
 
             wordsCounter = 0;
             pluginState = true;
-            //returnMessage('getData', data);
-            sendResponse({message: "enable plugin"});
-        }
-
-        // for future use
-        if (request.event == "reset") {
-            returnMessage("enable");
-            wordsCounter = 0;
-            pluginState = true;
-            returnMessage('getData',  JSON.parse(JSON.stringify(dataDefaults)));
+            getData();
             sendResponse({message: "enable plugin"});
         }
 
         if (request.event == "getData") {
-            returnMessage('getData', data);
+            //returnMessage('getData', data);
 
             sendResponse({data: data});
+            //alert('get data from background script');
 
         }
 
         if (request.event == "pluginState") {
+            //getData();
             sendResponse({data: pluginState});
+            //alert('get data from background script');
+
         }
         if (request.event == "updateStats") {
             sendResponse({data: statsData, limit: wordsLimit, counter: wordsCounter});
@@ -225,8 +218,9 @@ chrome.extension.onMessage.addListener(
 
         if (request.event == "updateWord") {
             updateWordData(request.word);
-            var newData = getWordById(request.word.id);
+            var newData = getWordById(request.word.id)
             sendResponse({result: 'success', word: newData});
+
 
         }
 
@@ -234,11 +228,9 @@ chrome.extension.onMessage.addListener(
 
 function returnMessage(messageToReturn, data) {
     chrome.tabs.getSelected(null, function (tab) {
-        if(!data){
-            data = {}
-        }
+
         chrome.tabs.sendMessage(tab.id, {event: messageToReturn, data: data}, function (response) {
-            console.log(response);
+            console.log(response.message);
         });
     });
 }
@@ -264,7 +256,8 @@ function updateWordData(wordData) {
             word: wordData.word,
             counter: wordData.renderCount,
             actionCount: wordData.actionCount,
-            id: wordData.id
+            id: wordData.id,
+            learned: wordData.learned == true ? 'learned' : 'learning'
         });
     }
     else {
@@ -272,16 +265,18 @@ function updateWordData(wordData) {
             if (statsData[i].id == wordData.id) {
                 statsData[i].counter = wordData.renderCount >= 3 ? 3 : wordData.renderCount;
                 statsData[i].actionCount = wordData.actionCount >= 3 ? 3 : wordData.actionCount;
+                statsData[i].learned = wordData.learned == true ? 'learned' : 'learning';
             }
         }
     }
 
+    console.log('update stats', statsData)
     chrome.runtime.sendMessage(editorExtensionId, {event: "updateStats", data: statsData}, function (response) {
         chrome.browserAction.setBadgeText({text: statsData.length.toString()});
     });
 
     if (wordsCounter >= wordsLimit) {
-        //todo open popup browser
+        console.log('pause plugin')
         chrome.tabs.getSelected(null, function (tab) {
             chrome.tabs.sendMessage(tab.id, {event: 'pause'}, function (response) {
                 console.log(response);
@@ -310,5 +305,3 @@ function getWordIndex(id) {
     }
     return result;
 };
-
-

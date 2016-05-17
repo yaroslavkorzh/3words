@@ -40,29 +40,29 @@ $(function(){
             if (request.event == "disable") {
 
                 wordsController.destroy();
-                sendResponse({farewell: "disable plugin"});
+                sendResponse({message: "disable plugin"});
             }
             if (request.event == "enable") {
                 wordsController.init();
-                sendResponse({farewell: "enable plugin"});
+                sendResponse({message: "enable plugin"});
             }
             if (request.event == "pause") {
                 wordsController.pause();
-                sendResponse({farewell: "pause plugin"});
+                sendResponse({message: "pause plugin"});
             }
             if (request.event == "reset") {
                 wordsController.reset();
             }
 
-            if (request.event == "getLettersData") {
-                if (request.reset == true) {
-                    wordsController.resetLettersData(request.response);
-                }
-                else {
-                    wordsController.setLettersData(request.response)
-                }
-
-            }
+            //if (request.event == "getLettersData") {
+            //    if (request.reset == true) {
+            //        wordsController.resetLettersData(request.response);
+            //    }
+            //    else {
+            //        wordsController.setLettersData(request.response)
+            //    }
+            //
+            //}
         }
     );
 });
@@ -125,7 +125,7 @@ function menuConstructor() {
                     $(this).find('.__ts-word-tooltip').addClass('__ts-word-tooltip--extended');
                     adjustPosition($(this));
                 }
-                else{
+                else {
                     $('.__ts-word').removeClass('__ts-word--active');
                     $('.__ts-word-tooltip').removeClass('__ts-word-tooltip--extended');
                     adjustPosition($(this));
@@ -133,12 +133,12 @@ function menuConstructor() {
 
                 self.isReady = true;
             }
-            else{
+            else {
                 $('.__ts-word').removeClass('__ts-word--active');
-                if(!$(this).hasClass('__ts-word--current-state') || true){
+                if (!$(this).hasClass('__ts-word--current-state') || true) {
                     $(this).off(animationEnd);
                     $(this).removeClass('__ts-word--current-state animated jello').addClass('__ts-word--active');
-                    if(!$(this).hasClass('__ts-word--learned-state--done')){
+                    if (!$(this).hasClass('__ts-word--learned-state--done')) {
                         $(this).removeClass('__ts-word--learned-state').addClass('__ts-word--active-state');
                     }
                     var $tooltip = $(this).find('.__ts-word-tooltip');
@@ -147,12 +147,12 @@ function menuConstructor() {
                     adjustPosition($(this));
                     var id = $(this).data('id');
                     var data = self.getWordById(id);
-                    data.actionCount +=1;
+                    data.actionCount += 1;
                     data.renderCount = 1;
-                    if(data.actionCount >= 3){
+                    if (data.actionCount >= 3) {
                         data.learned = true;
                     }
-                    else{
+                    else {
                         // data.learned = false;
                     }
 
@@ -199,7 +199,7 @@ function menuConstructor() {
                         self.isReady = true;
                     }
                 }
-            }, 1000);
+            }, 700);
 
 
 
@@ -212,7 +212,9 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word-tooltip', function (e) {
             e.stopPropagation();
-            $(document).trigger("click.tsWordsPlugin");
+            if(!$(this).hasClass('__ts-word-tooltip--extended')){
+                $('.__ts-icon--info-showmore').trigger("click.tsWordsPlugin");
+            }
         });
         $(document).on("click.tsWordsPlugin", '.__ts-icon--close', function (e) {
             e.stopPropagation();

@@ -38,7 +38,7 @@ $(function() {
         else{
             chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
                 $('.__ts-browser-stat').hide();
-                console.log(response.farewell);
+                console.log(response.message);
             });
         }
     })
@@ -56,6 +56,7 @@ function updateTable(data) {
                 '<td class="__ts-browser-stat__table__word">' + data[i].word + '</td>' +
                 '<td class="__ts-browser-stat__table__counter">' + data[i].counter + '</td>' +
                 '<td class="__ts-browser-stat__table__counter">' + data[i].actionCount + '</td>' +
+                '<td class="__ts-browser-stat__table__counter">' + data[i].learned + '</td>' +
                 '</tr>';
 
         }

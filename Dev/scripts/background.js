@@ -170,19 +170,18 @@ var wordsCounter = 0;
 var editorExtensionId = chrome.runtime.id;
 var statsData = [];
 
-
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
-            "from the extension");
+            "from the extension", request);
         if (request.event == "disable") {
             data = JSON.parse(JSON.stringify(dataDefaults));
             pluginState = false;
             statsData = [];
             wordsCounter = 0;
             returnMessage("disable");
-            sendResponse({farewell: "disable plugin"});
+            sendResponse({message: "disable plugin"});
         }
         if (request.event == "enable") {
             returnMessage("enable");
@@ -190,11 +189,11 @@ chrome.extension.onMessage.addListener(
             wordsCounter = 0;
             pluginState = true;
             getData();
-            sendResponse({farewell: "enable plugin"});
+            sendResponse({message: "enable plugin"});
         }
 
         if (request.event == "getData") {
-            getData();
+            //returnMessage('getData', data);
 
             sendResponse({data: data});
             //alert('get data from background script');
@@ -215,25 +214,17 @@ chrome.extension.onMessage.addListener(
             updateWordData(request.word);
             var newData = getWordById(request.word.id)
             sendResponse({result: 'success', word: newData});
-            //alert('get data from background script');
+
 
         }
 
     });
 
-function returnMessage(messageToReturn) {
+function returnMessage(messageToReturn, data) {
     chrome.tabs.getSelected(null, function (tab) {
 
-        chrome.tabs.sendMessage(tab.id, {event: messageToReturn}, function (response) {
-            console.log(response.farewell);
-        });
-    });
-}
-
-function getData() {
-    chrome.tabs.getSelected(null, function (tab) {
-        chrome.tabs.sendMessage(tab.id, {event: 'getData', response: data}, function (response) {
-            console.log(response.farewell);
+        chrome.tabs.sendMessage(tab.id, {event: messageToReturn, data: data}, function (response) {
+            console.log(response.message);
         });
     });
 }
@@ -259,7 +250,8 @@ function updateWordData(wordData) {
             word: wordData.word,
             counter: wordData.renderCount,
             actionCount: wordData.actionCount,
-            id: wordData.id
+            id: wordData.id,
+            learned: wordData.learned == true ? 'learned' : 'learning'
         });
     }
     else {
@@ -267,16 +259,18 @@ function updateWordData(wordData) {
             if (statsData[i].id == wordData.id) {
                 statsData[i].counter = wordData.renderCount >= 3 ? 3 : wordData.renderCount;
                 statsData[i].actionCount = wordData.actionCount >= 3 ? 3 : wordData.actionCount;
+                statsData[i].learned = wordData.learned == true ? 'learned' : 'learning';
             }
         }
     }
 
+    console.log('update stats', statsData)
     chrome.runtime.sendMessage(editorExtensionId, {event: "updateStats", data: statsData}, function (response) {
         chrome.browserAction.setBadgeText({text: statsData.length.toString()});
     });
 
     if (wordsCounter >= wordsLimit) {
-        //todo open popup browser
+        console.log('pause plugin')
         chrome.tabs.getSelected(null, function (tab) {
             chrome.tabs.sendMessage(tab.id, {event: 'pause'}, function (response) {
                 console.log(response);
