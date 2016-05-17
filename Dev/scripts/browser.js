@@ -37,6 +37,7 @@ $(function() {
         }
         else{
             chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
+                $('.__ts-browser-stat').hide();
                 console.log(response.farewell);
             });
         }

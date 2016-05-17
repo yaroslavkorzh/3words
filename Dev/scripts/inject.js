@@ -18,6 +18,7 @@ var wordsController = menuConstructor();
 
 
 $(function(){
+    console.log('Dom Ready')
     chrome.runtime.sendMessage(wordsController.editorExtensionId , {event: "pluginState"}, function (response) {
         if(response.data){
             wordsController.init();
@@ -43,6 +44,9 @@ $(function(){
                 wordsController.pause();
                 sendResponse({farewell: "pause plugin"});
             }
+            if (request.event == "reset") {
+                wordsController.reset();
+            }
 
             if (request.event == "getLettersData") {
                 if (request.reset == true) {
@@ -64,7 +68,7 @@ function menuConstructor() {
 
     controller.editorExtensionId = chrome.runtime.id;
     controller.random = false;
-    controller.dataword = [];
+    controller.data = [];
     controller.letters_data = [];
     controller.activeWord = {};
     controller.activeWordIndex = 0;
@@ -90,6 +94,7 @@ function menuConstructor() {
 
         var timer;
         $(document).on("scroll.tsWordsPlugin", function () {
+            console.log('scroll');
             if(self.isReady){
                 if ( timer ) clearTimeout(timer);
                 timer = setTimeout(function(){
@@ -201,6 +206,7 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word-tooltip', function (e) {
             e.stopPropagation();
+            $(document).trigger("click.tsWordsPlugin");
         });
         $(document).on("click.tsWordsPlugin", '.__ts-icon--close', function (e) {
             e.stopPropagation();
@@ -229,26 +235,36 @@ function menuConstructor() {
     };
     controller.initWord = function (element, data) {
         var self = this;
-        if (!data) {
-            data = this.data[this.activeWordIndex];
-        }
+        // if (!data) {
+        //     data = this.data[this.activeWordIndex];
+        // }
 
-        if (!data && this.activeWordIndex >= this.data.length) {
-            console.log('restart word loop');
-            this.activeWordIndex = 0;
-            data = this.data[this.activeWordIndex]
-        }
-        var index = this.activeWordIndex;
-        if (this.data[index]) {
-            this.data[index].renderCount += 1;
-
-        }
+        // if (!data && this.activeWordIndex >= this.data.length) {
+        //     console.log('restart word loop');
+        //     this.activeWordIndex = 0;
+        //     data = this.data[this.activeWordIndex]
+        // }
+        // var index = this.activeWordIndex;
+        // if (this.data[index]) {
+        //     this.data[index].renderCount += 1;
+        //
+        // }
+        // for(var i =0; i<this.data.length; i++ ){
+        //     if(i == index){
+        //         this.data[index].active = true;
+        //     }
+        //     else{
+        //         this.data[index].active = false;
+        //     }
+        //
+        // }
+        data.renderCount += 1;
         if(data.renderCount >= self.maxRender){
             data.learned = true;
 
             $('.__ts-word[data-id="'+data.id+'"]').removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
         }
-        this.updateWord(this.data[this.activeWordIndex]);
+        this.updateWord(data);
 
         this.highlightWord(element, data);
 
@@ -263,32 +279,78 @@ function menuConstructor() {
         var foundWords = this.words;
         var wordsInView = this.findWordsInView(foundWords) != null ? this.findWordsInView(foundWords) : [];
         var wordsLen = wordsInView.length;
+
         if (wordsLen > 0) {
             this.noWordsFound = false;
+
+            var activeWord = false;
+            for(var i= 0; i< self.data.length; i++){
+                if(self.data[i].active && !self.data[i].learned){
+                    activeWord = self.data[i];
+                    break;
+                }
+            }
+
+            // if(!activeWord){
+            //     for(var i= 0; i< self.data.length; i++){
+            //         if(!self.data[i].learned){
+            //             activeWord = self.data[i];
+            //             break;
+            //         }
+            //     }
+            // }
+
+
             for(var i =0; i< wordsLen; i++){
+
+
+
                 id = $(wordsInView[i]).data('id');
                 data = this.getWordById(id);
                 if(data && data.learned){
                     $(wordsInView[i]).removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
-                    if(this.activeWordIndex == data.id){
-                        this.activeWordIndex = 0;
-                        continue;
-                    }
+                    data.active = false;
+
+                    // if(this.activeWordIndex == data.id){
+                    //     this.activeWordIndex = 0;
+                    //     continue;
+                    // }
                 }
                 else{
-                    if(!this.activeWordIndex){
-                        this.activeWordIndex = id;
-                        console.log(data);
-                        this.initWord(wordsInView[i], data);
-                        break;
+                    if(data){
+                        if(activeWord){
+                            if($(wordsInView[i]).data('id') == activeWord.id){
+                                this.initWord(wordsInView[i], data);
+                                break;
+                            }
+                            else{
+                                console.log('no possible matches');
+                                this.noWordsFound = true;
+                            }
+                        }
+                        else{
+                            activeWord = data;
+                            activeWord.active = true;
+                            this.initWord(wordsInView[i], data);
+                            break;
+                        }
+
                     }
-                    else{
-                       if(this.activeWordIndex == data.id){
-                           console.log(data);
-                           this.initWord(wordsInView[i], data);
-                           break;
-                       }
-                    }
+
+                    /******/
+                    // if(!this.activeWordIndex){
+                    //     this.activeWordIndex = id;
+                    //     console.log(data);
+                    //     this.initWord(wordsInView[i], data);
+                    //     break;
+                    // }
+                    // else{
+                    //    if(this.activeWordIndex == data.id){
+                    //        console.log(data);
+                    //        this.initWord(wordsInView[i], data);
+                    //        break;
+                    //    }
+                    // }
 
                 }
             }
@@ -317,6 +379,7 @@ function menuConstructor() {
     };
     controller.findWordsInView = function (words) {
         var result = null;
+        if(!words) return result;
         for (var i = 0; i < words.length; i++) {
             var randWord = words[i];
             var id = $(randWord).data('id');
@@ -357,12 +420,6 @@ function menuConstructor() {
                 result = word;
             }
         }
-        for (var i = 0; i < this.letters_data.length; i++) {
-            word = this.letters_data[i];
-            if (word.id == id) {
-                result = word;
-            }
-        }
 
         return result;
     };
@@ -375,20 +432,16 @@ function menuConstructor() {
                 result = k;
             }
         }
-        for (var i = 0; i < this.letters_data.length; i++) {
-            word = this.letters_data[i];
-            if (word.id == id) {
-                result = word;
-            }
-        }
 
         return result;
     };
     controller.show = function () {
         this.init()
     };
-    controller.hide = function () {
-        this.rollBack();
+    controller.reset = function () {
+        $('.__ts-word').attr('class','__ts-word');
+        $('.__ts-word').find('.__ts-word-tooltip').attr('class','__ts-word-tooltip');
+
     };
     controller.rollBack = function () {
         var self = this;
@@ -403,11 +456,24 @@ function menuConstructor() {
         }
     };
     controller.setData = function (newData) {
+        var self = this;
         this.data = newData;
         console.log('got data');
         this.initWords();
         this.words = this.findWords();
-        this.randomWord();
+        var interval;
+        if(!this.words){
+            interval =  setInterval(function () {
+               self.initWords();
+               self.words = self.findWords();
+               self.randomWord();
+           }, 3000)
+        }
+        else{
+            this.randomWord();
+            clearInterval(interval);
+        }
+
     };
 
     controller.updateWord = function (word) {
