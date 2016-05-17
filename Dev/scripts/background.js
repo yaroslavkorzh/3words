@@ -270,12 +270,15 @@ function updateWordData(wordData) {
         }
     }
 
+    chrome.runtime.sendMessage(editorExtensionId, {event: "updateStats", data: statsData}, function (response) {
+        chrome.browserAction.setBadgeText({text: statsData.length.toString()});
+    });
 
     if (wordsCounter >= wordsLimit) {
         //todo open popup browser
         chrome.tabs.getSelected(null, function (tab) {
             chrome.tabs.sendMessage(tab.id, {event: 'pause'}, function (response) {
-
+                console.log(response);
             });
         });
     }
