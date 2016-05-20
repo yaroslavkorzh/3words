@@ -13,6 +13,10 @@
     &--translit{
       display: none;
     }
+
+    &--match {
+      display: none;
+    }
   }
 
   &.__ts-word--current-state{

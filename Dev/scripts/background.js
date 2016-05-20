@@ -8,13 +8,15 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'mom',
+        search: ['mom', 'mother', 'mummy', 'mothers'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
+        spelling: 'ponounciation',
         translation: 'мама',
         transliteration: 'mama',
-        example: 'My mama cooks the best pie I ever tried.',
-        imageurl: 'http://youmoms.org/wp-content/uploads/2015/12/mothers-happiness.jpg',//'language.jpg'
+        examples: ['I learned that my mama came from an amazing family.', 'In her old country, my mama saw a very poor blind woman with her young daughter.', 'My mama cooks the best pie I ever tried.'],
+        imageurl: 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Discussion.jpg',
 
     }, {
         id: '1',
@@ -25,13 +27,15 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'cat',
+        search: ['cat', 'kitty', 'cats', 'tomcat', 'pussycat', 'tom-cat'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
+        spelling: 'ponounciation',
         translation: 'кот',
         transliteration: 'kot',
-        example: 'My neghbours had a very cute red kot.',
-        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
+        examples: ['My neghbours had a very cute red kot.', 'My kot licks the hair dryer every morning for 10 minutes.', 'I recently found out that my kot, Marv, hates it when I read aloud.'],
+        imageurl: 'https://pbs.twimg.com/media/CbXW0yaUYAEKdlV.png'
     }, {
         id: '2',
         learned: false,
@@ -41,127 +45,234 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'how',
+        search: ['how'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
+        spelling: 'ponounciation',
         translation: 'как',
         transliteration: 'kahk',
-        example: 'Kak do I get to the train station?',
+        examples: ['Kak do I get to the train station?'],
         imageurl: 'http://www.howdesign.com/wp-content/uploads/header-logo.png'
+    }, {
+        id: '2',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'act',
+        search: ['act'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'ponounciation',
+        translation: 'акт',
+        transliteration: 'akt',
+        examples: ['An akt is an instrument that records a fact or something that has been said, done, or agreed.', 'Please provide instructions as to the manner and time of the disposition of a document under this Akt.'],
+        imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Third_Deck_Officers_Handover_on_board_of_Soviet_cargo_ship_Sarny_on_16_of_November_1987.jpg/800px-Third_Deck_Officers_Handover_on_board_of_Soviet_cargo_ship_Sarny_on_16_of_November_1987.jpg'
     },
-    // {
-    //     id: '3',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'so',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'так',
-    //     transliteration: 'tahk',
-    //     example: 'Tak you are from the USA?',
-    //     imageurl: 'https://yt3.ggpht.com/-UsWDpckUytU/AAAAAAAAAAI/AAAAAAAAAAA/xEj_G-KlTa8/s88-c-k-no-rj-c0xffffff/photo.jpg'
-    // }, {
-    //     id: '4',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'who',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'кто',
-    //     transliteration: 'ktoh',
-    //     example: 'Ktoh wants to become a millionaire.',
-    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
-    // }, {
-    //     id: '5',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'there',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'там',
-    //     transliteration: 'tahm',
-    //     example: 'I\'ll be tahm in half an hour.',
-    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS_gMm4cnuzS_llC1qUVP1S55AXYKUsNQjycWRCGTauM6LmTscd'
-    // }, {
-    //     id: '6',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'house',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'дом',
-    //     transliteration: 'dom',
-    //     example: 'Here\'s my dohm.',
-    //     imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSeTaZydnQeebe9W9gXyG73bYYRl-WLYWAzFoWvuyTKUnR7A_NXLg'
-    // }, {
-    //     id: '7',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'then',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'потом',
-    //     transliteration: 'puhtohm',
-    //     example: 'Go straight, puhtohm turn to the right.',
-    //     imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCo1HOjg5cdOPq5Adr0LLziWZAvV0CAOHNgC9WXm-MarM2l3nH'
-    // }, {
-    //     id: '8',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'place',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'место',
-    //     transliteration: 'myehstah',
-    //     example: 'Our team won the first myehstah.',
-    //     imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSIXYEePSh2zO3c8Mi7p0YlHgtOtPPHbA6jC5LcpmrO02wHklxGsA'
-    // }, {
-    //     id: '9',
-    //     learned: false,
-    //     active: false,
-    //     renderCount: 0,
-    //     renderCap: 3,
-    //     actionCount: 0,
-    //     actionCap: 3,
-    //     word: 'it',
-    //     type: 'word',
-    //     language_from: 'en',
-    //     language_to: 'ru',
-    //     translation: 'оно',
-    //     transliteration: 'ahnoh',
-    //     example: 'Yes, time doesn\'t run, ahnoh flies really!',
-    //     imageurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfj4QNLo63QEmQdtuOeQTi3S-HFNo9TEc7GPrlI4zu6qMNffavkA'
-    // }
+    {
+        id: '3',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'so',
+        search: ['so'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'ponounciation',
+        translation: 'так',
+        transliteration: 'tahk',
+        example: 'Tak you are from the USA?',
+        imageurl: 'https://yt3.ggpht.com/-UsWDpckUytU/AAAAAAAAAAI/AAAAAAAAAAA/xEj_G-KlTa8/s88-c-k-no-rj-c0xffffff/photo.jpg'
+    },
+    {
+        id: '4',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'who',
+        search: ['who'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'ponounciation',
+        translation: 'кто',
+        transliteration: 'ktoh',
+        example: ['Ktoh wants to become a millionaire.', 'Kto made the birthday cake?', 'Are you going to tell me kto he is?'],
+        imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTSSlZnrYVpe3Nh49c2C5_CT7pZyJhp5MrnyeZnCUgFWTV-eoMy'
+    },
+    {
+        id: '5',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'theme',
+        search: ['theme', 'topic'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'temah',
+        translation: 'тема',
+        transliteration: 'tema',
+        example: ['John sensed his anger on the tema and said nothing.', 'It wasn\'t a tema anyone wanted to speak — after all, this was supposed to be a cheery farewell dinner.' ],
+        imageurl: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQxxbheIWXglZffC1czmjO_LLsGD568HoxARuDwV2Me0yfWIg5F'
+    },
+    {
+        id: '6',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'tomato',
+        search: ['tomato'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'tohmaht',
+        translation: 'томат',
+        transliteration: 'tomat',
+        example: ['The tomat is native to western South America and Central America.', 'Today, the tomat is a critical and ubiquitous part of Middle Eastern cuisine.' ],
+        imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bright_red_tomato_and_cross_section02.jpg/220px-Bright_red_tomato_and_cross_section02.jpg'
+    },
+    {
+        id: '6',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'model',
+        search: ['maquette', 'model', 'layout'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'mahket',
+        translation: 'макет',
+        transliteration: 'maket',
+        example: ['Maket may be used to show the client how the finished work will fit in the proposed site.', 'I want to change the maket of my house' ],
+        imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg/300px-Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg'
+    },
+    {
+        id: '7',
+        learned: false,
+        active: false,
+        renderCount: 0,
+        renderCap: 3,
+        actionCount: 0,
+        actionCap: 3,
+        word: 'cacao',
+        search: ['cacao', 'cocoa'],
+        type: 'word',
+        language_from: 'en',
+        language_to: 'ru',
+        spelling: 'kahkahoh',
+        translation: 'какао',
+        transliteration: 'kakao',
+        example: ['Every country, from England to Austria, was producing confections from the fruit of the kakao tree.', 'The kakao tree is native to the Americas.'],
+        imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Cocoa_Pods.JPG/300px-Cocoa_Pods.JPG'
+    },
+    //{
+    //    id: '5',
+    //    learned: false,
+    //    active: false,
+    //    renderCount: 0,
+    //    renderCap: 3,
+    //    actionCount: 0,
+    //    actionCap: 3,
+    //    word: 'there',
+    //    type: 'word',
+    //    language_from: 'en',
+    //    language_to: 'ru',
+    //    spelling: 'ponounciation',
+    //    translation: 'там',
+    //    transliteration: 'tahm',
+    //    example: 'I\'ll be tahm in half an hour.',
+    //    imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS_gMm4cnuzS_llC1qUVP1S55AXYKUsNQjycWRCGTauM6LmTscd'
+    //}, {
+    //    id: '6',
+    //    learned: false,
+    //    active: false,
+    //    renderCount: 0,
+    //    renderCap: 3,
+    //    actionCount: 0,
+    //    actionCap: 3,
+    //    word: 'house',
+    //    type: 'word',
+    //    language_from: 'en',
+    //    language_to: 'ru',
+    //    spelling: 'ponounciation',
+    //    translation: 'дом',
+    //    transliteration: 'dom',
+    //    example: 'Here\'s my dohm.',
+    //    imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSeTaZydnQeebe9W9gXyG73bYYRl-WLYWAzFoWvuyTKUnR7A_NXLg'
+    //}, {
+    //    id: '7',
+    //    learned: false,
+    //    active: false,
+    //    renderCount: 0,
+    //    renderCap: 3,
+    //    actionCount: 0,
+    //    actionCap: 3,
+    //    word: 'then',
+    //    type: 'word',
+    //    language_from: 'en',
+    //    language_to: 'ru',
+    //    spelling: 'ponounciation',
+    //    translation: 'потом',
+    //    transliteration: 'puhtohm',
+    //    example: 'Go straight, puhtohm turn to the right.',
+    //    imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCo1HOjg5cdOPq5Adr0LLziWZAvV0CAOHNgC9WXm-MarM2l3nH'
+    //}, {
+    //    id: '8',
+    //    learned: false,
+    //    active: false,
+    //    renderCount: 0,
+    //    renderCap: 3,
+    //    actionCount: 0,
+    //    actionCap: 3,
+    //    word: 'place',
+    //    type: 'word',
+    //    language_from: 'en',
+    //    language_to: 'ru',
+    //    spelling: 'ponounciation',
+    //    translation: 'место',
+    //    transliteration: 'myehstah',
+    //    example: 'Our team won the first myehstah.',
+    //    imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSIXYEePSh2zO3c8Mi7p0YlHgtOtPPHbA6jC5LcpmrO02wHklxGsA'
+    //}, {
+    //    id: '9',
+    //    learned: false,
+    //    active: false,
+    //    renderCount: 0,
+    //    renderCap: 3,
+    //    actionCount: 0,
+    //    actionCap: 3,
+    //    word: 'it',
+    //    type: 'word',
+    //    language_from: 'en',
+    //    language_to: 'ru',
+    //    spelling: 'ponounciation',
+    //    translation: 'оно',
+    //    transliteration: 'ahnoh',
+    //    example: 'Yes, time doesn\'t run, ahnoh flies really!',
+    //    imageurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfj4QNLo63QEmQdtuOeQTi3S-HFNo9TEc7GPrlI4zu6qMNffavkA'
+    //}
 ];
 var data = JSON.parse(JSON.stringify(dataDefaults));
 var pluginState = true;
@@ -188,7 +299,7 @@ chrome.extension.onMessage.addListener(
 
             wordsCounter = 0;
             pluginState = true;
-            getData();
+            returnMessage('getData', data);
             sendResponse({message: "enable plugin"});
         }
 
@@ -221,10 +332,13 @@ chrome.extension.onMessage.addListener(
     });
 
 function returnMessage(messageToReturn, data) {
+    var data = !data ? {} : data;
     chrome.tabs.getSelected(null, function (tab) {
 
         chrome.tabs.sendMessage(tab.id, {event: messageToReturn, data: data}, function (response) {
-            console.log(response.message);
+            if (response) {
+                console.log(response.message);
+            }
         });
     });
 }
@@ -236,8 +350,8 @@ function updateWordData(wordData) {
     //     wordData.learned = true;
     // }
     wordsCounter = 0;
-    for(var k =0; k< data.length; k++){
-        if(data[k].learned){
+    for (var k = 0; k < data.length; k++) {
+        if (data[k].learned) {
             ++wordsCounter;
 
         }

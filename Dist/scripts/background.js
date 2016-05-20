@@ -14,12 +14,13 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'mom',
+        search: ['mom', 'mother', 'mummy', 'mothers'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
         translation: 'мама',
         transliteration: 'mama',
-        example: 'My mama cooks the best pie I ever tried.',
+        examples: ['My mama cooks the best pie I ever tried.'],
         imageurl: 'http://youmoms.org/wp-content/uploads/2015/12/mothers-happiness.jpg',//'language.jpg'
 
     }, {
@@ -31,12 +32,13 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'cat',
+        search: ['cat', 'kitty', 'cats', 'tomcat', 'pussycat', 'tom-cat'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
         translation: 'кот',
         transliteration: 'kot',
-        example: 'My neghbours had a very cute red kot.',
+        examples: ['My neghbours had a very cute red kot.', 'My kot licks the hair dryer every morning for 10 minutes.', 'I recently found out that my kot, Marv, hates it when I read aloud.'],
         imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSgYNEmNh6UUZdpAlje5S4BboAC-cwjoAzKsHUcH9M1l_bxHFNb'
     }, {
         id: '2',
@@ -47,12 +49,13 @@ var dataDefaults = [
         actionCount: 0,
         actionCap: 3,
         word: 'how',
+        search: ['how'],
         type: 'word',
         language_from: 'en',
         language_to: 'ru',
         translation: 'как',
         transliteration: 'kahk',
-        example: 'Kak do I get to the train station?',
+        examples: ['Kak do I get to the train station?'],
         imageurl: 'http://www.howdesign.com/wp-content/uploads/header-logo.png'
     },
     // {
@@ -194,7 +197,7 @@ chrome.extension.onMessage.addListener(
 
             wordsCounter = 0;
             pluginState = true;
-            getData();
+            returnMessage('getData', data);
             sendResponse({message: "enable plugin"});
         }
 
@@ -227,10 +230,13 @@ chrome.extension.onMessage.addListener(
     });
 
 function returnMessage(messageToReturn, data) {
+    var data = !data ? {} : data;
     chrome.tabs.getSelected(null, function (tab) {
 
         chrome.tabs.sendMessage(tab.id, {event: messageToReturn, data: data}, function (response) {
-            console.log(response.message);
+            if(response){
+                console.log(response.message);
+            }
         });
     });
 }
