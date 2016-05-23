@@ -103,6 +103,10 @@ body {
   &-help {
     display: inline-block;
 
+    &-title {
+      display: block;
+    }
+
     &-block {
       display: none;
       margin-bottom: 5px;
