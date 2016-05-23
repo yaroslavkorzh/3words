@@ -185,6 +185,33 @@ body {
 
       &__select {
         width: 100%;
+
+        &.rounded {
+          -webkit-border-radius: 10px;
+          -moz-border-radius: 10px;
+          border-radius: 10px;
+        }
+
+        &.semi-square {
+          -webkit-border-radius: 5px;
+          -moz-border-radius: 5px;
+          border-radius: 5px;
+        }
+
+        &.green    { background-color: $c_green; }
+
+
+        &--option {
+          option:hover {
+            background: $c_green_dark;
+          }
+
+
+          background: $c_green;
+          &:hover {
+            background: $c_green_dark;
+          }
+        }
       }
     }
 
