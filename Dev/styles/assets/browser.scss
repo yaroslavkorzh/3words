@@ -5,6 +5,66 @@ body {
 
 .__ts-browser {
 
+  &-controls {
+    width: 100%;
+    //height: 100%;
+
+    min-height: 75px;
+    display: inline-block;
+
+    &-vertical-line{
+      display: inline-block;
+      width: 1%;
+      height: 100%;
+    }
+
+    &-container {
+      //margin: auto;
+      width: 43%;//48px;
+      padding: 1%;
+
+      .__ts-browser-controls {
+
+        &.control-icon {
+          //width: 48px;
+          height: 48px;
+          cursor: pointer;
+
+          svg{
+            width: 100%;
+            height: 100%;
+            fill: $c_darkblue;
+
+            &:hover {
+              fill: lighten($c_darkblue, 10%);
+            }
+          }
+
+          &.selected {
+            background-color: $c_beige;
+            border-radius: 15px;
+
+            svg{
+              width: 100%;
+              height: 100%;
+              fill: $c_green_dark;
+            }
+
+            &:hover{
+              svg{
+                fill: lighten($c_green_dark, 5%);
+              }
+            }
+          }
+        }
+      }
+
+
+    }
+
+
+  }
+
   &-tooltip {
     width: 300px;
     padding: $s_space;
@@ -13,7 +73,8 @@ body {
 
     }
     &__footer {
-      border-top: 1px solid $c_orange;
+      margin-top: 10px;
+      border-top: 1px solid $c_darkblue;
     }
 
   }
@@ -28,6 +89,8 @@ body {
       color: $c_black;
       font-size: 0.9em;
 
+      text-align: center;
+      padding-top: 5px;
       padding-bottom: 0;
       border-bottom: 0;
     }
@@ -35,6 +98,51 @@ body {
 
   &-text {
 
+  }
+
+  &-help {
+    display: inline-block;
+
+    &-block {
+      display: none;
+      margin-bottom: 5px;
+
+      &.wrapper {
+        padding: 10px 0 10px 0;
+        border-top: 1px solid $c_darkblue;
+        border-bottom: 1px solid $c_darkblue;
+      }
+
+      &.close-icon {
+        display: block;
+        position: relative;
+        top: 2%;
+        left: 95%;
+        width: 12px;
+        height: 12px;
+        cursor: pointer;
+      }
+    }
+
+
+
+    &.help-icon {
+      margin-left: 1%;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+
+      svg{
+        width: 100%;
+        fill: $c_darkblue;
+      }
+
+      &:hover{
+        svg{
+          fill: lighten($c_darkblue, 20%);
+        }
+      }
+    }
   }
 
   &__form{
@@ -55,6 +163,32 @@ body {
 
   &-settings {
     display: none;
+
+    .__ts-browser {
+
+      &-title {
+        text-align: center;
+      }
+
+      &__form-block{
+        text-align: center;
+      }
+
+      &__label {
+
+      }
+
+      &__input-holder {
+
+
+      }
+
+      &__select {
+        width: 100%;
+      }
+    }
+
+
   }
 
   &-switch {
@@ -137,7 +271,9 @@ body {
 
 
   &-stat{
+
     display: none;
+
     &--visible{
       display: block;
     }
@@ -150,6 +286,10 @@ body {
       width: 100%;
       margin-top: $s_space /2;
 
+      border: solid 1px #DDEEEE;
+      border-collapse: collapse;
+      border-spacing: 0;
+
       tr{
 
         background: lighten($c_gray, 25%);
@@ -159,10 +299,17 @@ body {
 
 
         }
+
+        tbody tr:last-child td:first-child {
+          border-radius: 0 0 0 10px;
+        }
+        tbody tr:last-child td:last-child {
+          border-radius: 0 0 10px 0;
+        }
       }
       thead{
         tr{
-          background: $c_orange !important;
+          background: $c_green_dark !important;
           th{
             color: #fff;
             font-weight: normal;

@@ -53,9 +53,9 @@ var dataDefaults = [
         translation: 'как',
         transliteration: 'kahk',
         examples: ['Kak do I get to the train station?'],
-        imageurl: 'http://www.howdesign.com/wp-content/uploads/header-logo.png'
+        imageurl: 'https://66.media.tumblr.com/576bbfd483bb8b775923108389358c5e/tumblr_mktqckJTqD1rnlpewo1_500.jpg'
     }, {
-        id: '2',
+        id: '3',
         learned: false,
         active: false,
         renderCount: 0,
@@ -74,7 +74,7 @@ var dataDefaults = [
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Third_Deck_Officers_Handover_on_board_of_Soviet_cargo_ship_Sarny_on_16_of_November_1987.jpg/800px-Third_Deck_Officers_Handover_on_board_of_Soviet_cargo_ship_Sarny_on_16_of_November_1987.jpg'
     },
     {
-        id: '3',
+        id: '4',
         learned: false,
         active: false,
         renderCount: 0,
@@ -89,11 +89,11 @@ var dataDefaults = [
         spelling: 'ponounciation',
         translation: 'так',
         transliteration: 'tahk',
-        example: 'Tak you are from the USA?',
+        examples: ['Tak you are from the USA?'],
         imageurl: 'https://yt3.ggpht.com/-UsWDpckUytU/AAAAAAAAAAI/AAAAAAAAAAA/xEj_G-KlTa8/s88-c-k-no-rj-c0xffffff/photo.jpg'
     },
     {
-        id: '4',
+        id: '5',
         learned: false,
         active: false,
         renderCount: 0,
@@ -108,11 +108,11 @@ var dataDefaults = [
         spelling: 'ponounciation',
         translation: 'кто',
         transliteration: 'ktoh',
-        example: ['Ktoh wants to become a millionaire.', 'Kto made the birthday cake?', 'Are you going to tell me kto he is?'],
+        examples: ['Ktoh wants to become a millionaire.', 'Kto made the birthday cake?', 'Are you going to tell me kto he is?'],
         imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTSSlZnrYVpe3Nh49c2C5_CT7pZyJhp5MrnyeZnCUgFWTV-eoMy'
     },
     {
-        id: '5',
+        id: '6',
         learned: false,
         active: false,
         renderCount: 0,
@@ -127,11 +127,11 @@ var dataDefaults = [
         spelling: 'temah',
         translation: 'тема',
         transliteration: 'tema',
-        example: ['John sensed his anger on the tema and said nothing.', 'It wasn\'t a tema anyone wanted to speak — after all, this was supposed to be a cheery farewell dinner.' ],
+        examples: ['John sensed his anger on the tema and said nothing.', 'It wasn\'t a tema anyone wanted to speak — after all, this was supposed to be a cheery farewell dinner.' ],
         imageurl: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQxxbheIWXglZffC1czmjO_LLsGD568HoxARuDwV2Me0yfWIg5F'
     },
     {
-        id: '6',
+        id: '7',
         learned: false,
         active: false,
         renderCount: 0,
@@ -146,11 +146,11 @@ var dataDefaults = [
         spelling: 'tohmaht',
         translation: 'томат',
         transliteration: 'tomat',
-        example: ['The tomat is native to western South America and Central America.', 'Today, the tomat is a critical and ubiquitous part of Middle Eastern cuisine.' ],
+        examples: ['The tomat is native to western South America and Central America.', 'Today, the tomat is a critical and ubiquitous part of Middle Eastern cuisine.' ],
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bright_red_tomato_and_cross_section02.jpg/220px-Bright_red_tomato_and_cross_section02.jpg'
     },
     {
-        id: '6',
+        id: '8',
         learned: false,
         active: false,
         renderCount: 0,
@@ -165,11 +165,11 @@ var dataDefaults = [
         spelling: 'mahket',
         translation: 'макет',
         transliteration: 'maket',
-        example: ['Maket may be used to show the client how the finished work will fit in the proposed site.', 'I want to change the maket of my house' ],
+        examples: ['Maket may be used to show the client how the finished work will fit in the proposed site.', 'I want to change the maket of my house' ],
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg/300px-Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg'
     },
     {
-        id: '7',
+        id: '9',
         learned: false,
         active: false,
         renderCount: 0,
@@ -184,95 +184,9 @@ var dataDefaults = [
         spelling: 'kahkahoh',
         translation: 'какао',
         transliteration: 'kakao',
-        example: ['Every country, from England to Austria, was producing confections from the fruit of the kakao tree.', 'The kakao tree is native to the Americas.'],
+        examples: ['Every country, from England to Austria, was producing confections from the fruit of the kakao tree.', 'The kakao tree is native to the Americas.'],
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Cocoa_Pods.JPG/300px-Cocoa_Pods.JPG'
-    },
-    //{
-    //    id: '5',
-    //    learned: false,
-    //    active: false,
-    //    renderCount: 0,
-    //    renderCap: 3,
-    //    actionCount: 0,
-    //    actionCap: 3,
-    //    word: 'there',
-    //    type: 'word',
-    //    language_from: 'en',
-    //    language_to: 'ru',
-    //    spelling: 'ponounciation',
-    //    translation: 'там',
-    //    transliteration: 'tahm',
-    //    example: 'I\'ll be tahm in half an hour.',
-    //    imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcS_gMm4cnuzS_llC1qUVP1S55AXYKUsNQjycWRCGTauM6LmTscd'
-    //}, {
-    //    id: '6',
-    //    learned: false,
-    //    active: false,
-    //    renderCount: 0,
-    //    renderCap: 3,
-    //    actionCount: 0,
-    //    actionCap: 3,
-    //    word: 'house',
-    //    type: 'word',
-    //    language_from: 'en',
-    //    language_to: 'ru',
-    //    spelling: 'ponounciation',
-    //    translation: 'дом',
-    //    transliteration: 'dom',
-    //    example: 'Here\'s my dohm.',
-    //    imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSeTaZydnQeebe9W9gXyG73bYYRl-WLYWAzFoWvuyTKUnR7A_NXLg'
-    //}, {
-    //    id: '7',
-    //    learned: false,
-    //    active: false,
-    //    renderCount: 0,
-    //    renderCap: 3,
-    //    actionCount: 0,
-    //    actionCap: 3,
-    //    word: 'then',
-    //    type: 'word',
-    //    language_from: 'en',
-    //    language_to: 'ru',
-    //    spelling: 'ponounciation',
-    //    translation: 'потом',
-    //    transliteration: 'puhtohm',
-    //    example: 'Go straight, puhtohm turn to the right.',
-    //    imageurl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQCo1HOjg5cdOPq5Adr0LLziWZAvV0CAOHNgC9WXm-MarM2l3nH'
-    //}, {
-    //    id: '8',
-    //    learned: false,
-    //    active: false,
-    //    renderCount: 0,
-    //    renderCap: 3,
-    //    actionCount: 0,
-    //    actionCap: 3,
-    //    word: 'place',
-    //    type: 'word',
-    //    language_from: 'en',
-    //    language_to: 'ru',
-    //    spelling: 'ponounciation',
-    //    translation: 'место',
-    //    transliteration: 'myehstah',
-    //    example: 'Our team won the first myehstah.',
-    //    imageurl: 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSIXYEePSh2zO3c8Mi7p0YlHgtOtPPHbA6jC5LcpmrO02wHklxGsA'
-    //}, {
-    //    id: '9',
-    //    learned: false,
-    //    active: false,
-    //    renderCount: 0,
-    //    renderCap: 3,
-    //    actionCount: 0,
-    //    actionCap: 3,
-    //    word: 'it',
-    //    type: 'word',
-    //    language_from: 'en',
-    //    language_to: 'ru',
-    //    spelling: 'ponounciation',
-    //    translation: 'оно',
-    //    transliteration: 'ahnoh',
-    //    example: 'Yes, time doesn\'t run, ahnoh flies really!',
-    //    imageurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfj4QNLo63QEmQdtuOeQTi3S-HFNo9TEc7GPrlI4zu6qMNffavkA'
-    //}
+    }
 ];
 var data = JSON.parse(JSON.stringify(dataDefaults));
 var pluginState = true;
@@ -280,9 +194,17 @@ var wordsLimit = 3;
 var wordsCounter = 0;
 var editorExtensionId = chrome.runtime.id;
 var statsData = [];
+var badgeText = pluginState ? 'on' : 'off';
+var badgeColor = pluginState ? '#FB5151' : '#AFAFAF';
+chrome.browserAction.setBadgeText({text: badgeText});
+
+var iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
+chrome.browserAction.setIcon({path: iconPath});
+
 
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
+
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
             "from the extension", request);
@@ -291,14 +213,15 @@ chrome.extension.onMessage.addListener(
             pluginState = false;
             statsData = [];
             wordsCounter = 0;
+            updateBrowserAction();
             returnMessage("disable");
             sendResponse({message: "disable plugin"});
         }
         if (request.event == "enable") {
             returnMessage("enable");
-
             wordsCounter = 0;
             pluginState = true;
+            updateBrowserAction();
             returnMessage('getData', data);
             sendResponse({message: "enable plugin"});
         }
@@ -380,7 +303,7 @@ function updateWordData(wordData) {
 
     console.log('update stats', statsData)
     chrome.runtime.sendMessage(editorExtensionId, {event: "updateStats", data: statsData}, function (response) {
-        chrome.browserAction.setBadgeText({text: statsData.length.toString()});
+        updateBrowserAction()
     });
 
     if (wordsCounter >= wordsLimit) {
@@ -412,4 +335,20 @@ function getWordIndex(id) {
         }
     }
     return result;
+};
+
+function updateBrowserAction() {
+    badgeText = pluginState ? 'on' : 'off';
+    iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
+    badgeColor = pluginState ? '#FB5151' : '#AFAFAF';
+
+    if(statsData.length > 0 && pluginState){
+        badgeText = statsData.length.toString();
+    }
+    console.log(badgeText, badgeColor);
+    chrome.browserAction.setBadgeText({text: badgeText});
+
+    chrome.browserAction.setIcon({path: iconPath});
+
+    chrome.browserAction.setBadgeBackgroundColor({color: badgeColor});
 };

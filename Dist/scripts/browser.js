@@ -36,6 +36,10 @@ $(function() {
 
     $(document).on('change.tsWordsPlugin', '#tsWordsPlugin', function (e) {
         if($(this).prop('checked')){
+            $('.control-stats').addClass('selected');
+            $('.control-settings').removeClass('selected');
+            $('.__ts-browser-settings').fadeOut();
+            $('.__ts-browser-stat').fadeIn();
             chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function(response) {
 
                 console.log(response.message);
@@ -44,15 +48,51 @@ $(function() {
         else{
             chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
                 $('.__ts-browser-stat').hide();
+                $('.__ts-browser-settings').hide();
+                $('.control-stats').removeClass('selected');
+                $('.control-settings').removeClass('selected');
                 console.log(response.message);
             });
+        }
+    });
+    $(document).on('click', '.help-icon', function (e) {
+        $('.__ts-browser-help-block').fadeIn();
+    });
+    $(document).on('click', '.close-icon', function (e) {
+        $('.__ts-browser-help-block').fadeOut();
+    })
+
+    $(document).on('click', '.control-stats', function (e) {
+        if(!$(this).hasClass('selected')){
+            $(this).addClass('selected');
+            $('.control-settings').removeClass('selected');
+            $('.__ts-browser-settings').fadeOut();
+            $('.__ts-browser-stat').fadeIn();
+        }
+        else {
+            $(this).removeClass('selected');
+            $('.__ts-browser-stat').fadeOut();
+        }
+    });
+
+    $(document).on('click', '.control-settings', function (e) {
+
+        if(!$(this).hasClass('selected')){
+            $(this).addClass('selected');
+            $('.control-stats').removeClass('selected');
+            $('.__ts-browser-stat').fadeOut();
+            $('.__ts-browser-settings').fadeIn();
+
+        }
+        else {
+            $(this).removeClass('selected');
+            $('.__ts-browser-settings').fadeOut();
         }
     })
 });
 
 function updateTable(data) {
     var len = data.length;
-    chrome.browserAction.setBadgeText({text: len.toString()});
     $('.__ts-browser-stat__counter').text(len);
     console.log(data);
     if (len) {
@@ -68,9 +108,11 @@ function updateTable(data) {
         }
 
         $('.__ts-browser-stat__table tbody').html(html);
+        $('.control-stats').addClass('selected');
         $('.__ts-browser-stat').show();
     }
     else {
+        $('.control-stats').removeClass('selected');
         $('.__ts-browser-stat').hide();
     }
 }
