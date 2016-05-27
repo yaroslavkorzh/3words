@@ -116,6 +116,8 @@ function menuConstructor() {
 
         var timer;
         $(document).on("scroll.tsWordsPlugin", function () {
+            var target = $('.__ts-word--active')
+            self.adjustPopover(target)
 
             if(self.isReady){
                 if ( timer ) clearTimeout(timer);
@@ -137,6 +139,7 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word', function (e) {
             e.stopPropagation();
+            self.adjustPopover(this)
             if($(this).hasClass('__ts-word--active')){
                 if(!$(this).find('.__ts-word-tooltip').hasClass('__ts-word-tooltip--extended')){
                     $(this).find('.__ts-word-tooltip').addClass('__ts-word-tooltip--extended');
@@ -182,6 +185,7 @@ function menuConstructor() {
         });
         var hooverTimer;
         $(document).on("mouseenter.tsWordsPlugin", '.__ts-word', function (e) {
+            self.adjustPopover(this)
 
             e.stopPropagation();
             var $el = $(this);
@@ -642,6 +646,12 @@ function menuConstructor() {
         //var newe = enew.replace(query, data.word);
         //document.getElementsByTagName("body")[0].innerHTML = newe;
     };
+    controller.clearHighlight = function () {
+        $('.__ts-word--learned-state--done').removeClass('__ts-word--learned-state--done')
+        $('.__ts-word--learned-state').removeClass('__ts-word--learned-state')
+        $('.__ts-word--active').removeClass('__ts-word--active')
+        $('.__ts-word--active-state').removeClass('__ts-word--active-state')
+    };
     controller.createAnimation = function (selector, data, targetElement) {
         var elements = [];
         if (targetElement) {
@@ -868,6 +878,29 @@ function menuConstructor() {
         }
         return result;
     };
+    controller.adjustPopover = function (target) {
+
+        var activeEl = target ? $(target) : $('.__ts-word--active-state');
+        if(activeEl.length > 0){ //$('.__ts-word--active')
+            var activeOffset = activeEl.offset();
+            var activePosition = activeEl.position();
+            var activeOParent = activeEl.offsetParent();
+            var aHeight = activeEl.height();
+            var aWidth = activeEl.width();
+            var aScrollTop = activeEl.scrollTop();
+            var dScroll = $(document).scrollTop();
+            var tooltip = activeEl.find('.__ts-word-tooltip');
+            var adjustTop = activeOffset.top - dScroll + aHeight;
+            var adjustLeft = activeOffset.left + aWidth/2;
+            tooltip.css('top', adjustTop+'px');
+            tooltip.css('left', adjustLeft+'px');
+
+        }
+
+
+        console.log(adjustTop, adjustLeft, dScroll, activeOffset,activePosition,activeOParent,  aScrollTop, aHeight, aWidth);
+
+    };
 
     /* Workflow functions */
     controller.destroy = function () {
@@ -881,6 +914,10 @@ function menuConstructor() {
     controller.pause = function () {
         this.pluginState = this.states.paused;
         $(document).off("scroll.tsWordsPlugin");
+        $(document).off("click.tsWordsPlugin");
+        $(document).off("mouseenter.tsWordsPlugin");
+        $(document).off("mouseleave.tsWordsPlugin");
+        this.clearHighlight();
         console.log('pause plugin');
     };
 
@@ -894,7 +931,9 @@ function replaceInElement(element, searchData, replace) {
         var child = element.childNodes[i];
         if (child.nodeType == 1) { // ELEMENT_NODE
             var tag = child.nodeName.toLowerCase();
-            if (tag != 'style' && tag != 'script' && tag != 'a' && tag != 'meta' && tag != 'noscript') {
+            if (tag != 'style' && tag != 'script' &&
+                tag != 'a' && tag != 'meta' && tag != 'noscript' &&
+                tag != 'link') {
                 // special case, don't touch CDATA elements and URLs
                 replaceInElement(child, searchData, replace);
             }
@@ -922,23 +961,20 @@ function getRandomInt(min, max) {
 }
 function elementInViewport(el) {
     if(el){
-        var top = el.offsetTop;
-        var left = el.offsetLeft;
-        var width = el.offsetWidth;
-        var height = el.offsetHeight;
-
-        while (el.offsetParent) {
-            el = el.offsetParent;
-            top += el.offsetTop;
-            left += el.offsetLeft;
+        //special bonus for those using jQuery
+        if (typeof jQuery === "function" && el instanceof jQuery) {
+            el = el[0];
         }
 
-        return (
-            top >= window.pageYOffset &&
-            left >= window.pageXOffset &&
-            (top + height) <= (window.pageYOffset + window.innerHeight) &&
-            (left + width) <= (window.pageXOffset + window.innerWidth)
-        );
+        var rect = el.getBoundingClientRect();
+
+
+        var result = rect.bottom > 0 &&
+            rect.right > 0 &&
+            rect.left < (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */ &&
+            rect.top < (window.innerHeight || document. documentElement.clientHeight);
+
+        return result;
     }
     else{
         return false;

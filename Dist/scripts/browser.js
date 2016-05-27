@@ -40,13 +40,13 @@ $(function() {
             $('.control-settings').removeClass('selected');
             $('.__ts-browser-settings').fadeOut();
             $('.__ts-browser-stat').fadeIn();
-            chrome.runtime.sendMessage(editorExtensionId, {event: "enable"}, function(response) {
+            chrome.runtime.sendMessage(editorExtensionId, {event: "browser_enable"}, function(response) {
 
                 console.log(response.message);
             });
         }
         else{
-            chrome.runtime.sendMessage(editorExtensionId, {event: "disable"}, function(response) {
+            chrome.runtime.sendMessage(editorExtensionId, {event: "browser_disable"}, function(response) {
                 $('.__ts-browser-stat').hide();
                 $('.__ts-browser-settings').hide();
                 $('.control-stats').removeClass('selected');

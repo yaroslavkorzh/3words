@@ -36,6 +36,7 @@
     display: none;
     color: $c_black;
     font-weight: normal;
+    position: fixed !important;
 
     @include centered('x');
 

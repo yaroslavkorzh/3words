@@ -196,7 +196,7 @@ var dataDefaults = [
 ];
 var data = JSON.parse(JSON.stringify(dataDefaults));
 var pluginState = true;
-var wordsLimit = 3;
+var wordsLimit = 999;
 var wordsCounter = 0;
 var editorExtensionId = chrome.runtime.id;
 var statsData = [];
@@ -207,6 +207,11 @@ chrome.browserAction.setBadgeText({text: badgeText});
 var iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
 chrome.browserAction.setIcon({path: iconPath});
 
+chrome.tabs.onActivated.addListener(function (tab) {
+    console.log('enable onactivated')
+    returnMessage('enable')
+});
+
 
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -214,22 +219,22 @@ chrome.extension.onMessage.addListener(
         console.log(sender.tab ?
         "from a content script:" + sender.tab.url :
             "from the extension", request);
-        if (request.event == "disable") {
+        if (request.event == "browser_disable") {
             data = JSON.parse(JSON.stringify(dataDefaults));
             pluginState = false;
             statsData = [];
             wordsCounter = 0;
             updateBrowserAction();
-            returnMessage("disable");
-            sendResponse({message: "disable plugin"});
+            broadCastMessage("disable");
+            sendResponse({message: "browser_disable plugin"});
         }
-        if (request.event == "enable") {
-            returnMessage("enable");
+        if (request.event == "browser_enable") {
+            broadCastMessage("enable");
             wordsCounter = 0;
             pluginState = true;
             updateBrowserAction();
             returnMessage('getData', data);
-            sendResponse({message: "enable plugin"});
+            sendResponse({message: "browser_enable plugin"});
         }
 
         if (request.event == "getData") {
@@ -254,7 +259,7 @@ chrome.extension.onMessage.addListener(
             updateWordData(request.word);
             var newData = getWordById(request.word.id)
             sendResponse({result: 'success', word: newData});
-
+            broadCastMessage("updateWord", {result: 'success', word: newData});
 
         }
 
@@ -270,6 +275,45 @@ function returnMessage(messageToReturn, data) {
             }
         });
     });
+}
+
+function broadCastMessage(messageToReturn, data){
+    var data = !data ? {} : data;
+
+    chrome.tabs.getSelected(null, function (activeTab) {
+
+        chrome.tabs.query({}, function(tabs) {
+            for (var i=0; i<tabs.length; ++i) {
+                var tab = tabs[i];
+                if(tab.id != activeTab.id){
+                    chrome.tabs.sendMessage(tab.id,  {event: messageToReturn, data: data, activeTab: false}, function (response) {
+                        if (response) {
+                            console.log(response.message);
+                        }
+                    });
+                }
+                else {
+                    console.log('not sending response to itself');
+                    chrome.tabs.sendMessage(tab.id,  {event: messageToReturn, data: data, activeTab: true}, function (response) {
+                        if (response) {
+                            console.log(response.message);
+                        }
+                    });
+                }
+
+            }
+        });
+    });
+    //chrome.tabs.query({}, function(tabs) {
+    //    for (var i=0; i<tabs.length; ++i) {
+    //        chrome.tabs.sendMessage(tabs[i].id,  {event: messageToReturn, data: data}, function (response) {
+    //            if (response) {
+    //                console.log(response.message);
+    //            }
+    //        });
+    //    }
+    //});
+
 }
 
 function updateWordData(wordData) {
@@ -313,12 +357,15 @@ function updateWordData(wordData) {
     });
 
     if (wordsCounter >= wordsLimit) {
-        console.log('pause plugin')
-        chrome.tabs.getSelected(null, function (tab) {
-            chrome.tabs.sendMessage(tab.id, {event: 'pause'}, function (response) {
-                console.log(response);
-            });
-        });
+        console.log('pause plugin');
+        broadCastMessage('pause');
+        pluginState = false;
+
+        //chrome.tabs.getSelected(null, function (tab) {
+        //    chrome.tabs.sendMessage(tab.id, {event: 'pause'}, function (response) {
+        //        console.log(response);
+        //    });
+        //});
     }
 }
 
@@ -351,6 +398,10 @@ function updateBrowserAction() {
     if(statsData.length > 0 && pluginState){
         badgeText = statsData.length.toString();
     }
+    if(wordsCounter >= wordsLimit && !pluginState){
+        badgeText = '| |';
+    }
+
     console.log(badgeText, badgeColor);
     chrome.browserAction.setBadgeText({text: badgeText});
 

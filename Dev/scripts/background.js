@@ -190,7 +190,7 @@ var dataDefaults = [
 ];
 var data = JSON.parse(JSON.stringify(dataDefaults));
 var pluginState = true;
-var wordsLimit = 3;
+var wordsLimit = 999;
 var wordsCounter = 0;
 var editorExtensionId = chrome.runtime.id;
 var statsData = [];
@@ -200,6 +200,11 @@ chrome.browserAction.setBadgeText({text: badgeText});
 
 var iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
 chrome.browserAction.setIcon({path: iconPath});
+
+chrome.tabs.onActivated.addListener(function (tab) {
+    console.log('enable onactivated')
+    returnMessage('enable')
+});
 
 
 chrome.extension.onMessage.addListener(
@@ -387,6 +392,10 @@ function updateBrowserAction() {
     if(statsData.length > 0 && pluginState){
         badgeText = statsData.length.toString();
     }
+    if(wordsCounter >= wordsLimit && !pluginState){
+        badgeText = '| |';
+    }
+
     console.log(badgeText, badgeColor);
     chrome.browserAction.setBadgeText({text: badgeText});
 
