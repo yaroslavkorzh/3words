@@ -133,7 +133,7 @@ var dataDefaults = [
         spelling: 'temah',
         translation: 'тема',
         transliteration: 'tema',
-        examples: ['John sensed his anger on the tema and said nothing.', 'It wasn\'t a tema anyone wanted to speak — after all, this was supposed to be a cheery farewell dinner.' ],
+        examples: ['John sensed his anger on the tema and said nothing.', 'It wasn\'t a tema anyone wanted to speak — after all, this was supposed to be a cheery farewell dinner.'],
         imageurl: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQxxbheIWXglZffC1czmjO_LLsGD568HoxARuDwV2Me0yfWIg5F'
     },
     {
@@ -152,7 +152,7 @@ var dataDefaults = [
         spelling: 'tohmaht',
         translation: 'томат',
         transliteration: 'tomat',
-        examples: ['The tomat is native to western South America and Central America.', 'Today, the tomat is a critical and ubiquitous part of Middle Eastern cuisine.' ],
+        examples: ['The tomat is native to western South America and Central America.', 'Today, the tomat is a critical and ubiquitous part of Middle Eastern cuisine.'],
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bright_red_tomato_and_cross_section02.jpg/220px-Bright_red_tomato_and_cross_section02.jpg'
     },
     {
@@ -171,7 +171,7 @@ var dataDefaults = [
         spelling: 'mahket',
         translation: 'макет',
         transliteration: 'maket',
-        examples: ['Maket may be used to show the client how the finished work will fit in the proposed site.', 'I want to change the maket of my house' ],
+        examples: ['Maket may be used to show the client how the finished work will fit in the proposed site.', 'I want to change the maket of my house'],
         imageurl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg/300px-Scale_Model_Of_The_Tower_Of_London_In_The_Tower_Of_London.jpg'
     },
     {
@@ -204,7 +204,7 @@ var badgeText = pluginState ? 'on' : 'off';
 var badgeColor = pluginState ? '#FB5151' : '#AFAFAF';
 chrome.browserAction.setBadgeText({text: badgeText});
 
-var iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
+var iconPath = pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
 chrome.browserAction.setIcon({path: iconPath});
 
 chrome.tabs.onActivated.addListener(function (tab) {
@@ -239,17 +239,14 @@ chrome.extension.onMessage.addListener(
 
         if (request.event == "getData") {
             //returnMessage('getData', data);
-
             sendResponse({data: data});
             //alert('get data from background script');
-
         }
 
         if (request.event == "pluginState") {
             //getData();
             sendResponse({data: pluginState});
             //alert('get data from background script');
-
         }
         if (request.event == "updateStats") {
             sendResponse({data: statsData, limit: wordsLimit, counter: wordsCounter});
@@ -257,7 +254,7 @@ chrome.extension.onMessage.addListener(
 
         if (request.event == "updateWord") {
             updateWordData(request.word);
-            var newData = getWordById(request.word.id)
+            var newData = getWordById(request.word.id);
             sendResponse({result: 'success', word: newData});
             broadCastMessage("updateWord", {result: 'success', word: newData});
 
@@ -277,16 +274,20 @@ function returnMessage(messageToReturn, data) {
     });
 }
 
-function broadCastMessage(messageToReturn, data){
+function broadCastMessage(messageToReturn, data) {
     var data = !data ? {} : data;
 
     chrome.tabs.getSelected(null, function (activeTab) {
 
-        chrome.tabs.query({}, function(tabs) {
-            for (var i=0; i<tabs.length; ++i) {
+        chrome.tabs.query({}, function (tabs) {
+            for (var i = 0; i < tabs.length; ++i) {
                 var tab = tabs[i];
-                if(tab.id != activeTab.id){
-                    chrome.tabs.sendMessage(tab.id,  {event: messageToReturn, data: data, activeTab: false}, function (response) {
+                if (tab.id != activeTab.id) {
+                    chrome.tabs.sendMessage(tab.id, {
+                        event: messageToReturn,
+                        data: data,
+                        activeTab: false
+                    }, function (response) {
                         if (response) {
                             console.log(response.message);
                         }
@@ -294,7 +295,11 @@ function broadCastMessage(messageToReturn, data){
                 }
                 else {
                     console.log('not sending response to itself');
-                    chrome.tabs.sendMessage(tab.id,  {event: messageToReturn, data: data, activeTab: true}, function (response) {
+                    chrome.tabs.sendMessage(tab.id, {
+                        event: messageToReturn,
+                        data: data,
+                        activeTab: true
+                    }, function (response) {
                         if (response) {
                             console.log(response.message);
                         }
@@ -304,16 +309,6 @@ function broadCastMessage(messageToReturn, data){
             }
         });
     });
-    //chrome.tabs.query({}, function(tabs) {
-    //    for (var i=0; i<tabs.length; ++i) {
-    //        chrome.tabs.sendMessage(tabs[i].id,  {event: messageToReturn, data: data}, function (response) {
-    //            if (response) {
-    //                console.log(response.message);
-    //            }
-    //        });
-    //    }
-    //});
-
 }
 
 function updateWordData(wordData) {
@@ -326,7 +321,6 @@ function updateWordData(wordData) {
     for (var k = 0; k < data.length; k++) {
         if (data[k].learned) {
             ++wordsCounter;
-
         }
     }
     var result = $.grep(statsData, function (e) {
@@ -351,7 +345,7 @@ function updateWordData(wordData) {
         }
     }
 
-    console.log('update stats', statsData)
+    console.log('update browser stats', statsData)
     chrome.runtime.sendMessage(editorExtensionId, {event: "updateStats", data: statsData}, function (response) {
         updateBrowserAction()
     });
@@ -392,13 +386,13 @@ function getWordIndex(id) {
 
 function updateBrowserAction() {
     badgeText = pluginState ? 'on' : 'off';
-    iconPath =  pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
+    iconPath = pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
     badgeColor = pluginState ? '#FB5151' : '#AFAFAF';
 
-    if(statsData.length > 0 && pluginState){
+    if (statsData.length > 0 && pluginState) {
         badgeText = statsData.length.toString();
     }
-    if(wordsCounter >= wordsLimit && !pluginState){
+    if (wordsCounter >= wordsLimit && !pluginState) {
         badgeText = '| |';
     }
 

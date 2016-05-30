@@ -1,11 +1,10 @@
-
 var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 $.fn.extend({
     animateCss: function (animationName, callback) {
-        $(this).addClass('animated ' + animationName).one(animationEnd, function() {
+        $(this).addClass('animated ' + animationName).one(animationEnd, function () {
             $(this).removeClass('animated ' + animationName);
-            if(callback) {
-                setTimeout(function(){
+            if (callback) {
+                setTimeout(function () {
                     callback.call(this);
                 }, 500);
             }
@@ -17,10 +16,9 @@ $.fn.extend({
 var wordsController = menuConstructor();
 
 
-$(function(){
-    console.log('Dom Ready')
-    chrome.runtime.sendMessage(wordsController.editorExtensionId , {event: "pluginState"}, function (response) {
-        if(response.data){
+$(function () {
+    chrome.runtime.sendMessage(wordsController.editorExtensionId, {event: "pluginState"}, function (response) {
+        if (response.data) {
             wordsController.init();
         }
 
@@ -35,10 +33,9 @@ $(function(){
                 sendResponse({message: "disable plugin"});
             }
             if (request.event == "enable") {
-                if(request.activeTab == true){
+                if (request.activeTab == true) {
                     wordsController.init();
                 }
-
                 sendResponse({message: "enable plugin"});
             }
             if (request.event == "pause") {
@@ -53,20 +50,9 @@ $(function(){
             if (request.event == "updateWord" && request.activeTab == false) {
                 wordsController.updateWordData(request.data.word);
             }
-
-            //if (request.event == "getLettersData") {
-            //    if (request.reset == true) {
-            //        wordsController.resetLettersData(request.response);
-            //    }
-            //    else {
-            //        wordsController.setLettersData(request.response)
-            //    }
-            //
-            //}
         }
     );
 });
-
 
 
 function menuConstructor() {
@@ -93,6 +79,8 @@ function menuConstructor() {
     controller.timer = 400;
     controller.animationClass = 'jello';
     controller.isReady = true;
+
+    /* Workflow functions */
     controller.init = function () {
         console.log('init controller');
         this.initHandlers();
@@ -102,34 +90,53 @@ function menuConstructor() {
         });
 
     };
+    controller.destroy = function () {
+        $(document).off("scroll.tsWordsPlugin");
+        $('.__ts-word').each(function () {
+            var text = $(this).find('.__ts-word__label--current').text();
+            $(this).replaceWith(text);
+        });
+        console.log('destroy plugin');
+    };
+    controller.pause = function () {
+        this.pluginState = this.states.paused;
+        $(document).off("scroll.tsWordsPlugin");
+        $(document).off("click.tsWordsPlugin");
+        $(document).off("mouseenter.tsWordsPlugin");
+        $(document).off("mouseleave.tsWordsPlugin");
+        this.clearHighlight();
+        console.log('pause plugin');
+    };
+
+    /* Initialization functions */
     controller.initHandlers = function () {
         var self = this;
 
-        console.log('init handlers')
-        $(document).on( 'ajaxComplete', function(event, xhr, settings ) {
+        console.log('init handlers');
+        $(document).on('ajaxComplete', function (event, xhr, settings) {
             console.log('content loaded', "Triggered ajaxComplete handler. The result is " +
-                xhr.responseText )
+                xhr.responseText);
             self.initWords();
             self.words = self.findWords();
-            self.randomWord();
+            self.pickRandomWord();
         });
 
         var timer;
         $(document).on("scroll.tsWordsPlugin", function () {
-            var target = $('.__ts-word--active')
-            self.adjustPopover(target)
+            var target = $('.__ts-word--active');
+            self.adjustPopover(target);
 
-            if(self.isReady){
-                if ( timer ) clearTimeout(timer);
-                timer = setTimeout(function(){
+            if (self.isReady) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function () {
                     var $activeWord = $('.__ts-word--active-state');
                     console.log('scroll end');
-                    if(!elementInViewport($activeWord[0])){
+                    if (!elementInViewport($activeWord[0])) {
                         self.rollbackWord($activeWord);
-                        self.randomWord();
+                        self.pickRandomWord();
                     }
                     if (self.pluginState = self.states.enabled && self.noWordsFound) {
-                        self.randomWord();
+                        self.pickRandomWord();
                     }
                 }, self.timer);
             }
@@ -139,9 +146,9 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word', function (e) {
             e.stopPropagation();
-            self.adjustPopover(this)
-            if($(this).hasClass('__ts-word--active')){
-                if(!$(this).find('.__ts-word-tooltip').hasClass('__ts-word-tooltip--extended')){
+            self.adjustPopover(this);
+            if ($(this).hasClass('__ts-word--active')) {
+                if (!$(this).find('.__ts-word-tooltip').hasClass('__ts-word-tooltip--extended')) {
                     $(this).find('.__ts-word-tooltip').addClass('__ts-word-tooltip--extended');
                     adjustPosition($(this));
                 }
@@ -181,39 +188,38 @@ function menuConstructor() {
                 }
             }
 
-            
+
         });
         var hooverTimer;
         $(document).on("mouseenter.tsWordsPlugin", '.__ts-word', function (e) {
-            self.adjustPopover(this)
-
+            self.adjustPopover(this);
             e.stopPropagation();
             var $el = $(this);
-            hooverTimer = setTimeout(function(){
+            hooverTimer = setTimeout(function () {
                 console.log('in');
-                if($el.hasClass('__ts-word--active') || $el.attr('class') == '__ts-word'){
+                if ($el.hasClass('__ts-word--active') || $el.attr('class') == '__ts-word') {
                     clearTimeout(hooverTimer);
                     return false;
                 }
-                else{
+                else {
                     $('.__ts-word').removeClass('__ts-word--active');
-                    if(!$el.hasClass('__ts-word--current-state' || true)){
+                    if (!$el.hasClass('__ts-word--current-state' || true)) {
                         $el.off(animationEnd);
                         $el.removeClass('__ts-word--current-state animated jello').addClass('__ts-word--active');
-                        if(!$el.hasClass('__ts-word--learned-state--done')){
+                        if (!$el.hasClass('__ts-word--learned-state--done')) {
                             $el.removeClass('__ts-word--learned-state').addClass('__ts-word--active-state');
                         }
                         adjustPosition($el);
                         var id = $el.data('id');
                         var data = self.getWordById(id);
-                        data.actionCount +=1;
+                        data.actionCount += 1;
 
                         data.renderCount = 1;
 
-                        if(data.actionCount >= 3){
+                        if (data.actionCount >= 3) {
                             data.learned = true;
                         }
-                        else{
+                        else {
                             // data.learned = false;
                         }
                         self.updateWord(data);
@@ -221,7 +227,6 @@ function menuConstructor() {
                     }
                 }
             }, 700);
-
 
 
         });
@@ -233,7 +238,7 @@ function menuConstructor() {
 
         $(document).on("click.tsWordsPlugin", '.__ts-word-tooltip', function (e) {
             e.stopPropagation();
-            if(!$(this).hasClass('__ts-word-tooltip--extended')){
+            if (!$(this).hasClass('__ts-word-tooltip--extended')) {
                 $('.__ts-icon--info-showmore').trigger("click.tsWordsPlugin");
             }
         });
@@ -261,7 +266,7 @@ function menuConstructor() {
         this.initWords();
         this.words = this.findWords();
         var interval;
-        if(!this.words){
+        if (!this.words) {
             console.log('no words');
             // interval =  setInterval(function () {
             //     if(self.retryCount >= self.retryCap){
@@ -271,13 +276,13 @@ function menuConstructor() {
             //     else {
             //         //self.initWords();
             //         self.words = self.findWords();
-            //         self.randomWord();
+            //         self.pickRandomWord();
             //     }
             //
             //}, 3000)
         }
-        else{
-            this.randomWord();
+        else {
+            this.pickRandomWord();
             //clearInterval(interval);
         }
 
@@ -290,14 +295,14 @@ function menuConstructor() {
             this.findWord(item);
         }
     };
-    controller.randomWord = function () {
+    controller.pickRandomWord = function () {
         console.log('random word');
         var self = this;
         var id, data;
         var foundWords = this.words;
         var wordsInView = this.findWordsInView(foundWords) != null ? this.findWordsInView(foundWords) : [];
         var wordsLen = wordsInView.length;
-        if(this.retryCount >= this.retryCap){
+        if (this.retryCount >= this.retryCap) {
             console.log('retry limit reached, stop loop');
             return false;
         }
@@ -306,9 +311,9 @@ function menuConstructor() {
             this.noWordsFound = false;
 
             var activeWord = false;
-            for(var i= 0; i< self.data.length; i++){
-                if(self.data[i].active && !self.data[i].learned){
-                    activeWord = self.data[i];
+            for (var k = 0; k < self.data.length; k++) {
+                if (self.data[k].active && !self.data[k].learned) {
+                    activeWord = self.data[k];
                     break;
                 }
             }
@@ -323,35 +328,33 @@ function menuConstructor() {
             // }
 
 
-            for(var i =0; i< wordsLen; i++){
-
-
+            for (var i = 0; i < wordsLen; i++) {
 
                 id = $(wordsInView[i]).data('id');
                 data = this.getWordById(id);
-                if(data && data.learned){
-                    $(wordsInView[i]).removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
+                if (data && data.learned) {
+                    $(wordsInView[i]).removeClass('__ts-word--active-state')
+                        .addClass('__ts-word--learned-state __ts-word--learned-state--done');
                     data.active = false;
-
                     // if(this.activeWordIndex == data.id){
                     //     this.activeWordIndex = 0;
                     //     continue;
                     // }
                 }
-                else{
-                    if(data){
-                        if(activeWord){
-                            if($(wordsInView[i]).data('id') == activeWord.id){
+                else {
+                    if (data) {
+                        if (activeWord) {
+                            if ($(wordsInView[i]).data('id') == activeWord.id) {
                                 this.initWord(wordsInView[i], data);
                                 break;
                             }
-                            else{
+                            else {
                                 console.log('no possible matches');
                                 this.noWordsFound = true;
                                 this.retryCount++;
                             }
                         }
-                        else{
+                        else {
                             activeWord = data;
                             activeWord.active = true;
                             this.initWord(wordsInView[i], data);
@@ -377,8 +380,6 @@ function menuConstructor() {
 
                 }
             }
-
-
 
 
         }
@@ -416,16 +417,14 @@ function menuConstructor() {
         //
         // }
         data.renderCount += 1;
-        if(data.renderCount >= self.maxRender){
+        if (data.renderCount >= self.maxRender) {
             data.learned = true;
 
-            $('.__ts-word[data-id="'+data.id+'"]').removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
+            $('.__ts-word[data-id="' + data.id + '"]').removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
         }
         this.updateWord(data);
 
         this.highlightWord(element, data);
-
-
 
 
     };
@@ -438,10 +437,10 @@ function menuConstructor() {
     controller.findWord = function (data) {
         var self = this;
         var searchStr = '';
-        for(var i =0; i< data.search.length; i++){
+        for (var i = 0; i < data.search.length; i++) {
             var wordVar = data.search[i];
-            if(i>0){
-                searchStr = searchStr + '|'+ wordVar;
+            if (i > 0) {
+                searchStr = searchStr + '|' + wordVar;
             }
             else {
                 searchStr = wordVar;
@@ -461,7 +460,7 @@ function menuConstructor() {
     };
     controller.findWordsInView = function (words) {
         var result = null;
-        if(!words) return result;
+        if (!words) return result;
         for (var i = 0; i < words.length; i++) {
             var randWord = words[i];
             var id = $(randWord).data('id');
@@ -498,12 +497,12 @@ function menuConstructor() {
         this.init()
     };
     controller.reset = function () {
-        $('.__ts-word').attr('class','__ts-word');
-        $('.__ts-word').find('.__ts-word-tooltip').attr('class','__ts-word-tooltip');
+        $('.__ts-word').attr('class', '__ts-word');
+        $('.__ts-word').find('.__ts-word-tooltip').attr('class', '__ts-word-tooltip');
 
     };
-    controller.markLearnedWord = function(word){
-        $('.__ts-word[data-id="'+word.id+'"]').removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
+    controller.markLearnedWord = function (word) {
+        $('.__ts-word[data-id="' + word.id + '"]').removeClass('__ts-word--active-state').addClass('__ts-word--learned-state __ts-word--learned-state--done');
     };
     controller.rollBack = function () {
         var self = this;
@@ -524,7 +523,7 @@ function menuConstructor() {
         //console.log('update word data', word);
         var data = this.getWordById(word.id);
         data = word;
-        if(data.actionCount > data.actionCap){
+        if (data.actionCount > data.actionCap) {
             data.learned = true;
             this.markLearnedWord(data);
         }
@@ -538,19 +537,19 @@ function menuConstructor() {
         console.info('recieved word update', word);
         var data = this.getWordById(word.id);
         var index = this.getWordIndex(word.id);
-        if(word.learned){
+        if (word.learned) {
             this.markLearnedWord(word);
         }
 
         this.data[index] = word;
     };
 
-    controller.generatePopover = function(data, match){
+    controller.generatePopover = function (data, match) {
         var examplesList = '';
 
-        for(var k =0; k< data.examples.length; k++){
+        for (var k = 0; k < data.examples.length; k++) {
             var example = data.examples[k];
-            examplesList += '<li><ts3Words class="__ts-word-tooltip__example__text">'+example+'</ts3Words></li>' ;
+            examplesList += '<li><ts3Words class="__ts-word-tooltip__example__text">' + example + '</ts3Words></li>';
         }
 
         var tooltipEl = document.createElement('ts3Words');
@@ -558,32 +557,32 @@ function menuConstructor() {
             .addClass('__ts-word')
             .attr('data-id', data.id)
             .attr('id', 'ts3WordsID__' + getRandomInt(0, 1000))
-            .append('<ts3Words class="__ts-word__label __ts-word__label--match">'+match[0]+'</ts3Words>')
-            .append('<ts3Words class="__ts-word__label __ts-word__label--current">'+match[0]+'</ts3Words>')// not data.word because many searches to one word
-            .append('<ts3Words class="__ts-word__label __ts-word__label--translate">'+data.translation+'</ts3Words>')
-            .append('<ts3Words class="__ts-word__label __ts-word__label--translit">'+data.transliteration+'</ts3Words>')
+            .append('<ts3Words class="__ts-word__label __ts-word__label--match">' + match[0] + '</ts3Words>')
+            .append('<ts3Words class="__ts-word__label __ts-word__label--current">' + match[0] + '</ts3Words>')// not data.word because many searches to one word
+            .append('<ts3Words class="__ts-word__label __ts-word__label--translate">' + data.translation + '</ts3Words>')
+            .append('<ts3Words class="__ts-word__label __ts-word__label--translit">' + data.transliteration + '</ts3Words>')
             .append('' +
                 '<ts3Words class="__ts-word-tooltip">' +
                 '<ts3Words class="__ts-word-tooltip__corner"></ts3Words>' +
-                '<ts3Words class="__ts-icon __ts-icon--info __ts-icon--info-showmore" title="show more"><svg viewBox="0 0 543.906 543.906"><path  d="M271.953,0C121.759,0,0,121.759,0,271.953s121.759,271.953,271.953,271.953 s271.953-121.759,271.953-271.953S422.148,0,271.953,0z M316.994,76.316c1.055-0.049,2.138-0.06,3.231,0 c14.724-0.484,27.533,10.622,29.578,24.987c6.576,27.581-22.719,55.228-49.631,44.192 C268.032,130.576,284.224,77.909,316.994,76.316z M303.739,196.318c20.875-1.327,24.519,22.964,18.014,47.592 c-12.695,56.583-32.455,111.403-43.175,168.442c5.178,22.523,33.575-3.312,45.721-11.558c10.329-8.213,12.124,2.083,15.637,10.71 c-25.776,18.058-51.687,36.447-80.395,50.991c-26.972,16.361-49.049-9.072-42.321-37.394 c11.128-52.841,25.776-104.882,37.736-157.564c3.737-28.468-33.728,0.511-44.872,7.136c-8.985,11.292-13.25,3.051-16.997-7.136 c29.871-21.816,60.325-48.593,93.313-65.949C293.138,198.238,298.92,196.622,303.739,196.318z"/></svg> </ts3Words>'+
+                '<ts3Words class="__ts-icon __ts-icon--info __ts-icon--info-showmore" title="show more"><svg viewBox="0 0 543.906 543.906"><path  d="M271.953,0C121.759,0,0,121.759,0,271.953s121.759,271.953,271.953,271.953 s271.953-121.759,271.953-271.953S422.148,0,271.953,0z M316.994,76.316c1.055-0.049,2.138-0.06,3.231,0 c14.724-0.484,27.533,10.622,29.578,24.987c6.576,27.581-22.719,55.228-49.631,44.192 C268.032,130.576,284.224,77.909,316.994,76.316z M303.739,196.318c20.875-1.327,24.519,22.964,18.014,47.592 c-12.695,56.583-32.455,111.403-43.175,168.442c5.178,22.523,33.575-3.312,45.721-11.558c10.329-8.213,12.124,2.083,15.637,10.71 c-25.776,18.058-51.687,36.447-80.395,50.991c-26.972,16.361-49.049-9.072-42.321-37.394 c11.128-52.841,25.776-104.882,37.736-157.564c3.737-28.468-33.728,0.511-44.872,7.136c-8.985,11.292-13.25,3.051-16.997-7.136 c29.871-21.816,60.325-48.593,93.313-65.949C293.138,198.238,298.92,196.622,303.739,196.318z"/></svg> </ts3Words>' +
                 '<ts3Words class="__ts-icon __ts-icon--close"><svg viewBox="0 0 212.982 212.982"><path style="fill-rule:evenodd;clip-rule:evenodd;" d="M131.804,106.491l75.936-75.936c6.99-6.99,6.99-18.323,0-25.312 c-6.99-6.99-18.322-6.99-25.312,0l-75.937,75.937L30.554,5.242c-6.99-6.99-18.322-6.99-25.312,0c-6.989,6.99-6.989,18.323,0,25.312 l75.937,75.936L5.242,182.427c-6.989,6.99-6.989,18.323,0,25.312c6.99,6.99,18.322,6.99,25.312,0l75.937-75.937l75.937,75.937 c6.989,6.99,18.322,6.99,25.312,0c6.99-6.99,6.99-18.322,0-25.312L131.804,106.491z"/></svg></ts3Words>' +
-                '<ts3Words class="__ts-word-tooltip__header">'+ match[0] +' - '+data.translation+'</ts3Words>' +
+                '<ts3Words class="__ts-word-tooltip__header">' + match[0] + ' - ' + data.translation + '</ts3Words>' +
                 '<ts3Words class="__ts-word-tooltip__description">' +
                 '<ts3Words class="__ts-word-tooltip__blockquote">' +
-                '<ts3Words class="__ts-word-tooltip__blockquote__spelling">Pronounced in Russian: <ts3Words class="__ts-word-tooltip__blockquote__spelling-word">'+data.transliteration+'</ts3Words><ts3Words class="__ts-icon __ts-icon--volume"><svg viewBox="0 0 31.237 31.237"><path d="M4.363,10.761H0v9.715h4.363l8.244,6.114c0,0,1.512,1.268,1.512-0.041c0-1.312,0-20.858,0-22.051 c0-1.028-1.33-0.024-1.33-0.024L4.363,10.761z"/><path d="M18.816,8.865c-0.436-0.434-1.137-0.434-1.568,0c-0.436,0.434-0.436,1.138,0,1.568 c1.426,1.431,2.133,3.286,2.135,5.157c-0.002,1.875-0.709,3.742-2.135,5.166c-0.436,0.434-0.436,1.136,0,1.573 c0.215,0.218,0.498,0.324,0.785,0.324c0.281,0,0.566-0.106,0.783-0.324c1.855-1.859,2.787-4.306,2.785-6.739 C21.604,13.155,20.672,10.721,18.816,8.865z"/><path d="M21.824,5.37c-0.438-0.436-1.139-0.436-1.572,0c-0.43,0.435-0.43,1.137,0,1.572 c2.398,2.396,3.592,5.52,3.596,8.657c-0.004,3.154-1.193,6.292-3.596,8.702c-0.432,0.434-0.43,1.133,0,1.57 c0.219,0.212,0.502,0.322,0.787,0.322c0.283,0,0.568-0.11,0.785-0.322c2.832-2.84,4.242-6.562,4.242-10.272 C26.066,11.901,24.645,8.194,21.824,5.37z"/> <path d="M25.508,1.79c-0.432-0.436-1.135-0.436-1.57,0c-0.43,0.434-0.43,1.138,0,1.568 c3.387,3.387,5.078,7.809,5.078,12.245c0,4.449-1.686,8.884-5.078,12.278c-0.434,0.433-0.43,1.139,0,1.57 c0.219,0.215,0.504,0.322,0.789,0.322c0.281,0,0.564-0.107,0.781-0.322c3.822-3.825,5.73-8.845,5.729-13.849 C31.238,10.607,29.32,5.602,25.508,1.79z"/></svg> </ts3Words></ts3Words>' +
-                '<ts3Words class="__ts-word-tooltip__blockquote__spelling">Written: <ts3Words class="__ts-word-tooltip__blockquote__spelling-word">'+match[0]+'</ts3Words></ts3Words>' +
+                '<ts3Words class="__ts-word-tooltip__blockquote__spelling">Pronounced in Russian: <ts3Words class="__ts-word-tooltip__blockquote__spelling-word">' + data.transliteration + '</ts3Words><ts3Words class="__ts-icon __ts-icon--volume"><svg viewBox="0 0 31.237 31.237"><path d="M4.363,10.761H0v9.715h4.363l8.244,6.114c0,0,1.512,1.268,1.512-0.041c0-1.312,0-20.858,0-22.051 c0-1.028-1.33-0.024-1.33-0.024L4.363,10.761z"/><path d="M18.816,8.865c-0.436-0.434-1.137-0.434-1.568,0c-0.436,0.434-0.436,1.138,0,1.568 c1.426,1.431,2.133,3.286,2.135,5.157c-0.002,1.875-0.709,3.742-2.135,5.166c-0.436,0.434-0.436,1.136,0,1.573 c0.215,0.218,0.498,0.324,0.785,0.324c0.281,0,0.566-0.106,0.783-0.324c1.855-1.859,2.787-4.306,2.785-6.739 C21.604,13.155,20.672,10.721,18.816,8.865z"/><path d="M21.824,5.37c-0.438-0.436-1.139-0.436-1.572,0c-0.43,0.435-0.43,1.137,0,1.572 c2.398,2.396,3.592,5.52,3.596,8.657c-0.004,3.154-1.193,6.292-3.596,8.702c-0.432,0.434-0.43,1.133,0,1.57 c0.219,0.212,0.502,0.322,0.787,0.322c0.283,0,0.568-0.11,0.785-0.322c2.832-2.84,4.242-6.562,4.242-10.272 C26.066,11.901,24.645,8.194,21.824,5.37z"/> <path d="M25.508,1.79c-0.432-0.436-1.135-0.436-1.57,0c-0.43,0.434-0.43,1.138,0,1.568 c3.387,3.387,5.078,7.809,5.078,12.245c0,4.449-1.686,8.884-5.078,12.278c-0.434,0.433-0.43,1.139,0,1.57 c0.219,0.215,0.504,0.322,0.789,0.322c0.281,0,0.564-0.107,0.781-0.322c3.822-3.825,5.73-8.845,5.729-13.849 C31.238,10.607,29.32,5.602,25.508,1.79z"/></svg> </ts3Words></ts3Words>' +
+                '<ts3Words class="__ts-word-tooltip__blockquote__spelling">Written: <ts3Words class="__ts-word-tooltip__blockquote__spelling-word">' + match[0] + '</ts3Words></ts3Words>' +
                 '</ts3Words>' +
                 '<ts3Words class="__ts-word-tooltip__example">' +
                 '<ts3Words class="__ts-word-tooltip__example__title"><ts3Words class="__ts-icon __ts-icon--info __ts-icon--info--example"><svg viewBox="0 0 543.906 543.906"><path  d="M271.953,0C121.759,0,0,121.759,0,271.953s121.759,271.953,271.953,271.953 s271.953-121.759,271.953-271.953S422.148,0,271.953,0z M316.994,76.316c1.055-0.049,2.138-0.06,3.231,0 c14.724-0.484,27.533,10.622,29.578,24.987c6.576,27.581-22.719,55.228-49.631,44.192 C268.032,130.576,284.224,77.909,316.994,76.316z M303.739,196.318c20.875-1.327,24.519,22.964,18.014,47.592 c-12.695,56.583-32.455,111.403-43.175,168.442c5.178,22.523,33.575-3.312,45.721-11.558c10.329-8.213,12.124,2.083,15.637,10.71 c-25.776,18.058-51.687,36.447-80.395,50.991c-26.972,16.361-49.049-9.072-42.321-37.394 c11.128-52.841,25.776-104.882,37.736-157.564c3.737-28.468-33.728,0.511-44.872,7.136c-8.985,11.292-13.25,3.051-16.997-7.136 c29.871-21.816,60.325-48.593,93.313-65.949C293.138,198.238,298.92,196.622,303.739,196.318z"/></svg></ts3Words> Examples of usage:</ts3Words>' +
-                '<ul>'+examplesList +'</ul>'+
+                '<ul>' + examplesList + '</ul>' +
                 '</ts3Words>' +
                 '</ts3Words>' +
                 '<ts3Words class="__ts-word-tooltip__figure">' +
-                '<img class="__ts-word-tooltip__img" src="'+data.imageurl+'">' +
-                '<ts3Words class="__ts-word-tooltip__figcaption">'+data.examples[0]+'</ts3Words>' +
+                '<img class="__ts-word-tooltip__img" src="' + data.imageurl + '">' +
+                '<ts3Words class="__ts-word-tooltip__figcaption">' + data.examples[0] + '</ts3Words>' +
                 '</ts3Words>' +
                 '</ts3Words>');
-        if(data.learned){
+        if (data.learned) {
             $(tooltipEl).addClass('__ts-word--learned-state __ts-word--learned-state--done');
         }
         return tooltipEl;
@@ -593,42 +592,42 @@ function menuConstructor() {
         var self = this;
         if (element && !$(element).hasClass('__ts-word--learned-state')) {
             console.log('---------highlight--------');
-            console.info('id:',data.id, '| word:', data.word, '| translation:', data.translation, '| render count:',data.renderCount);
+            console.info('id:', data.id, '| word:', data.word, '| translation:', data.translation, '| render count:', data.renderCount);
             self.isReady = false;
             $(element).addClass('__ts-word--current-state')
-                .animateCss(self.animationClass, function(){
-                $(element)
-                    .removeClass('__ts-word--current-state')
-                    .addClass('__ts-word--active-state')
-                    .animateCss(self.animationClass, function(){
+                .animateCss(self.animationClass, function () {
+                    $(element)
+                        .removeClass('__ts-word--current-state')
+                        .addClass('__ts-word--active-state')
+                        .animateCss(self.animationClass, function () {
 
-                        if($(element).hasClass('__ts-word--active')){
-                            self.isReady = true;
-                        }
-                        else{
-                            $(element).removeClass('__ts-word--active-state').addClass('__ts-word--learned-state');
-                            $(element).animateCss(self.animationClass, function() {
-                                $(element).removeClass('__ts-word--learned-state').addClass('__ts-word--active-state');
-                                if($(element).hasClass('__ts-word--active')){
-                                    self.isReady = true;
-                                }
-                                else{
-                                    self.isReady = true;
-                                    $(element).animateCss(self.animationClass);
-                                }
+                            if ($(element).hasClass('__ts-word--active')) {
+                                self.isReady = true;
+                            }
+                            else {
+                                $(element).removeClass('__ts-word--active-state').addClass('__ts-word--learned-state');
+                                $(element).animateCss(self.animationClass, function () {
+                                    $(element).removeClass('__ts-word--learned-state').addClass('__ts-word--active-state');
+                                    if ($(element).hasClass('__ts-word--active')) {
+                                        self.isReady = true;
+                                    }
+                                    else {
+                                        self.isReady = true;
+                                        $(element).animateCss(self.animationClass);
+                                    }
 
 
-                            });
-                        }
+                                });
+                            }
 
-                    });
-            });
+                        });
+                });
 
         }
     };
     controller.rollbackWord = function ($el) {
         $('.__ts-word').removeClass('__ts-word--active');
-       $el.removeClass('__ts-word--active-state');
+        $el.removeClass('__ts-word--active-state');
     };
     controller.clearAll = function (data) {
         var text = data.transliteration;
@@ -647,202 +646,10 @@ function menuConstructor() {
         //document.getElementsByTagName("body")[0].innerHTML = newe;
     };
     controller.clearHighlight = function () {
-        $('.__ts-word--learned-state--done').removeClass('__ts-word--learned-state--done')
-        $('.__ts-word--learned-state').removeClass('__ts-word--learned-state')
-        $('.__ts-word--active').removeClass('__ts-word--active')
-        $('.__ts-word--active-state').removeClass('__ts-word--active-state')
-    };
-    controller.createAnimation = function (selector, data, targetElement) {
-        var elements = [];
-        if (targetElement) {
-            elements.push($(targetElement));
-        }
-        else {
-            elements = $('.' + selector);
-        }
-        setTimeout(function () {
-            for (var i = 0; i < elements.length; i++) {
-                var item = elements[i];
-                var id = $(item).attr('id');
-                (function (element, data, id) {
-                    var elem = $('#' + id);
-                    var pluginInited = elem.data('tt');
-                    if (!pluginInited) {
-                        elem.textillate({
-                            minDisplayTime: 100,
-                            in: {
-                                effect: 'tada',
-                                delayScale: 1.5,
-                                delay: 50,
-                                sync: true,
-                                shuffle: false,
-                                reverse: false,
-                                callback: function () {
-
-                                }
-                            },
-                            // out animation settings.
-                            out: {
-                                effect: 'tada',
-                                delayScale: 1.5,
-                                delay: 125,
-                                sync: true,
-                                shuffle: false,
-                                reverse: false,
-                                callback: function () {
-
-                                }
-                            }
-                        });
-                        elem.data('tt', true);
-                    }
-                    else {
-                        elem.textillate('start');
-                    }
-
-                    setTimeout(function () {
-                        elem.find('.texts li:first').text(data.translation);
-                        elem.textillate('start');
-                    }, 750)
-                    setTimeout(function () {
-                        elem.find('.texts li:first').text(data.transliteration);
-                        elem.textillate('start');
-                    }, 1500)
-
-                })(item, data, id)
-
-            }
-
-        }, 50)
-
-    };
-    controller.createPopover = function (selector, data, element) {
-        var template = ' ';
-        var popover_small = '<div  class="popover--tooltip preview" >'
-            + '<div  class="popover--tooltip__ta-wrapper" >'
-            + '<div  class="popover--tooltip__translation" >'
-            + '<div  class="popover--tooltip__translation popover--data__translation--label" >' + 'Translation: ' + '</div>'
-            + '<br><span> Translation: ' + data.translation + '</span>'
-            + '<br><span> Transliteration: ' + data.transliteration + '</span>'
-            + '<br><span> Meaning: ' + data.meaning + '</span>'
-            + '</div>'
-            + '</div>'
-            + '<div  class="" >' + '<button type="button" class="btn btn-info popover--expand">See more</button>' + '</div>'
-            + '</div>';
-
-        var popover_big = '<div  class="popover--data expanding hidden" >'
-            + '<div  class="popover--data__ta-wrapper" >'
-            + '<div  class="popover--data__translation" >'
-            + '<div  class="popover--data__translation popover--data__translation--label" >' + 'Translation: ' + '</div>'
-            + '<br><span> Translation: ' + data.translation + '</span>'
-            + '<br><span> Transliteration: ' + data.transliteration + '</span>'
-            + '<br><span> Meaning: ' + data.meaning + '</span>'
-            + '</div>'
-
-            + '<div  class="popover--data__association" >'
-            + '<div  class="popover--data__association data__association--label" >' + 'Associated image: ' + '</div>'
-            + '<div  class="popover--data__association data__association--image" >' + '<img src="' + data.imageurl + '" alt="image">' + '</div>'
-            + '</div>'
-            + '</div>'
-
-            + '<div  class="popover--data__example" >' + '<div  class="popover--data__example popover--data__example--label" >' + 'Examples: ' + '</div>' + data.examples[0] + '</div>'
-            + '<div  class="popover--data__audio" >'
-            + '<div  class="popover--data__audio data__audio--label" >' + 'test btn : ' + '</div>'
-            + '<div  class="popover--data__audio data__audio--cont" >' + '<button class="test hidden ">Test messaging</button>' + '<button type="button" class="btn btn-success nextWord">I\'m done</button>' + '</div>'
-            + '</div>'
-            + '<div  class="popover--data__audio" >'
-            + '<div  class="popover--data__audio data__audio--label" >' + 'Pronunciation : ' + '</div>'
-            + '<div  class="popover--data__audio data__audio--cont" >'
-            //+ '<audio src="audio/The_Weeknd.mp3" class="audio--control" controls >'
-            + '</div>'
-            + '</div>';
-
-        var cont = '<div  class="popover-content__wrapper">' + template + popover_small + popover_big + '</div>';
-        var className = '.' + selector;//'popover__tooltip';
-
-        var header_small = '<div  class="popover--header preview " >'
-            + '<div  class="popover--header__label" >' + data.word
-            + ' <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i> '
-            + data.translation + '</span></div>'
-            + '</div>';
-        var header_big = '<div  class="popover--header expanding hidden" >'
-            + '<div  class="popover--header__label" >' + '<span>Translation: ' + data.word
-            + ' <i class="fa fa-arrow-right fa-1" aria-hidden="true"></i> '
-            + data.translation + '</span></div>'
-            + '<i class="popover--header__close fa fa-times fa-3" aria-hidden="true"></i>'
-            + '</div>';
-        var header = header_big + header_small;
-        (function (selector, targetElement, cont, header) {
-            setTimeout(function () {
-                var elements = [];
-                if (targetElement) {
-                    elements.push($(targetElement));
-                }
-                else {
-                    elements = $('.' + selector);
-                }
-
-                for (var i = 0; i < elements.length; i++) {
-                    var item = elements[i];
-                    var id = $(item).attr('id');
-                    var element = $('#' + id);
-
-                    element.popover({
-                            trigger: 'hover ',//hover
-                            //selector: ,
-                            content: function () {
-                                return cont;//
-                            },
-                            title: function () {
-                                return header;//
-                            },
-                            placement: 'bottom',//auto | bottom | top
-                            delay: {show: 50, hide: 400}
-                        }
-                    ); // tooltip |   { trigger: "hover focus click" }
-
-                    //element.tooltip({
-                    //	trigger: 'hover',//hover
-                    //	html: true,
-                    //	title: function() {
-                    //		return data.transliteration + ' is '+ data.word + '. Click the word';//$('#popover-content').html();
-                    //	},//'Click the word',
-                    //	placement: 'auto',
-                    //	delay: {show: 50, hide: 100}}
-                    //); // tooltip |   { trigger: "hover focus click" }
-
-                    element.on('show.bs.popover', function (e) {
-                        //$('.js-overlay').show();
-                        $(this).addClass('popover--open').removeClass('new').addClass('active');
-                        var wordId = $(this).data('id');
-                        var word = wordsController.getWordById(wordId);
-                        if (word.renderCount != 1) {
-                            word.renderCount = 1;
-                            wordsController.updateWord(word);
-                        }
-
-                        //console.log('show:', e.target, this);
-                    });
-
-                    element.on('shown.bs.popover', function (e) {
-                        $('.js-overlay').show();
-                        $('.popover').addClass('preview');
-                        //console.log('shown:', e.target, this);
-                    });
-                    element.on('hide.bs.popover', function (e) {
-                        var popover = $('.popover');
-                        popover.removeClass('expanded').addClass('preview');
-                        popover.find('.expanding').addClass('hidden');
-                        popover.find('.preview').removeClass('hidden');
-                    });
-                    element.on('hidden.bs.popover', function (e) {
-                        $('.js-overlay').hide();
-                        $(this).removeClass('popover--open').addClass('new').removeClass('active');
-                    });
-                }
-
-            }, 1000)
-        })(selector, element, cont, header);
+        $('.__ts-word--learned-state--done').removeClass('__ts-word--learned-state--done');
+        $('.__ts-word--learned-state').removeClass('__ts-word--learned-state');
+        $('.__ts-word--active').removeClass('__ts-word--active');
+        $('.__ts-word--active-state').removeClass('__ts-word--active-state');
     };
 
     /* Utility functions */
@@ -881,7 +688,7 @@ function menuConstructor() {
     controller.adjustPopover = function (target) {
 
         var activeEl = target ? $(target) : $('.__ts-word--active-state');
-        if(activeEl.length > 0){ //$('.__ts-word--active')
+        if (activeEl.length > 0) { //$('.__ts-word--active')
             var activeOffset = activeEl.offset();
             var activePosition = activeEl.position();
             var activeOParent = activeEl.offsetParent();
@@ -891,35 +698,16 @@ function menuConstructor() {
             var dScroll = $(document).scrollTop();
             var tooltip = activeEl.find('.__ts-word-tooltip');
             var adjustTop = activeOffset.top - dScroll + aHeight;
-            var adjustLeft = activeOffset.left + aWidth/2;
-            tooltip.css('top', adjustTop+'px');
-            tooltip.css('left', adjustLeft+'px');
+            var adjustLeft = activeOffset.left + aWidth / 2;
+            tooltip.css('top', adjustTop + 'px');
+            tooltip.css('left', adjustLeft + 'px');
 
         }
 
 
-        console.log(adjustTop, adjustLeft, dScroll, activeOffset,activePosition,activeOParent,  aScrollTop, aHeight, aWidth);
+        console.log(adjustTop, adjustLeft, dScroll, activeOffset, activePosition, activeOParent, aScrollTop, aHeight, aWidth);
 
-    };
-
-    /* Workflow functions */
-    controller.destroy = function () {
-        $(document).off("scroll.tsWordsPlugin");
-        $('.__ts-word').each(function(){
-            var text = $(this).find('.__ts-word__label--current').text();
-            $(this).replaceWith(text);
-        });
-        console.log('destroy plugin');
-    };
-    controller.pause = function () {
-        this.pluginState = this.states.paused;
-        $(document).off("scroll.tsWordsPlugin");
-        $(document).off("click.tsWordsPlugin");
-        $(document).off("mouseenter.tsWordsPlugin");
-        $(document).off("mouseleave.tsWordsPlugin");
-        this.clearHighlight();
-        console.log('pause plugin');
-    };
+    };   
 
     return controller;
 }
@@ -960,7 +748,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 function elementInViewport(el) {
-    if(el){
+    if (el) {
         //special bonus for those using jQuery
         if (typeof jQuery === "function" && el instanceof jQuery) {
             el = el[0];
@@ -971,30 +759,29 @@ function elementInViewport(el) {
 
         var result = rect.bottom > 0 &&
             rect.right > 0 &&
-            rect.left < (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */ &&
-            rect.top < (window.innerHeight || document. documentElement.clientHeight);
+            rect.left < (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */ &&
+            rect.top < (window.innerHeight || document.documentElement.clientHeight);
 
         return result;
     }
-    else{
+    else {
         return false;
     }
 
 }
 
-
-function adjustPosition($el){
+function adjustPosition($el) {
     $el.removeClass('__ts-pos-left').removeClass('__ts-pos-right');
     var left = $el.find('.__ts-word-tooltip').offset().left;
     var space = 20;
-    if(left  < space){
+    if (left < space) {
         $el.removeClass('__ts-pos-right').addClass('__ts-pos-left');
     }
-    else{
-        if(($(window).width() - ($el.find('.__ts-word-tooltip').offset().left + $el.find('.__ts-word-tooltip').width())) < space){
+    else {
+        if (($(window).width() - ($el.find('.__ts-word-tooltip').offset().left + $el.find('.__ts-word-tooltip').width())) < space) {
             $el.removeClass('__ts-pos-left').addClass('__ts-pos-right');
         }
-        else{
+        else {
             $el.removeClass('__ts-pos-left').removeClass('__ts-pos-right');
         }
     }
