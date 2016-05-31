@@ -713,7 +713,7 @@ function menuConstructor() {
 
         console.log(adjustTop, adjustLeft, dScroll, activeOffset, activePosition, activeOParent, aScrollTop, aHeight, aWidth);
 
-    };   
+    };
 
     return controller;
 }
