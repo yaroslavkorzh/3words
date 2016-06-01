@@ -264,10 +264,14 @@ function menuConstructor() {
         this.data = newData;
         console.log('got data');
         this.initWords();
-        this.words = this.findWords();
+        //this.words = this.findWords();
         var interval;
-        if (!this.words) {
+        if (!this.words || this.words.length == 0) {
             console.log('no words');
+            setTimeout(function () {
+                console.log('ajax data research for words');
+                self.initWords();
+            }, 3000);
             // interval =  setInterval(function () {
             //     if(self.retryCount >= self.retryCap){
             //         console.log('retry limit reached, stop loop');
@@ -292,8 +296,9 @@ function menuConstructor() {
         var self = this;
         for (var i = 0; i < this.data.length; i++) {
             var item = this.data[i];
-            this.findWord(item);
+            this.searchWord(item);
         }
+        this.findWords();
     };
     controller.pickRandomWord = function () {
         console.log('random word');
@@ -434,7 +439,7 @@ function menuConstructor() {
     };
 
     /* Search functions */
-    controller.findWord = function (data) {
+    controller.searchWord = function (data) {
         var self = this;
         var searchStr = '';
         for (var i = 0; i < data.search.length; i++) {
@@ -682,6 +687,7 @@ function menuConstructor() {
         var foundWords = $('.__ts-word');
         if (foundWords.length > 0) {
             result = foundWords
+            this.words = foundWords;
         }
         return result;
     };
