@@ -202,16 +202,16 @@ var editorExtensionId = chrome.runtime.id;
 var statsData = [];
 var badgeText = pluginState ? 'on' : 'off';
 var badgeColor = pluginState ? '#FB5151' : '#AFAFAF';
-chrome.browserAction.setBadgeText({text: badgeText});
+//chrome.browserAction.setBadgeText({text: badgeText});
 
 var iconPath = pluginState ? 'Dist/imgs/icons/icon16.png' : 'Dist/imgs/icons/icon16_inactive.png';
-chrome.browserAction.setIcon({path: iconPath});
+updateBrowserAction()
 
 chrome.tabs.onActivated.addListener(function (tab) {
     console.log('enable onactivated')
     returnMessage('enable')
 });
-
+//alert('loaded');
 
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
